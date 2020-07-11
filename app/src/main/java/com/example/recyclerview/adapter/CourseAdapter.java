@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.recyclerview.data.CourseData;
+import com.example.recyclerview.data.Course;
 import com.example.recyclerview.R;
 import com.squareup.picasso.Picasso;
 
@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHolder> {
     Context context;
-    ArrayList<CourseData> courseDatas = new ArrayList<>();
+    ArrayList<Course> courses = new ArrayList<>();
     private OnItemClickListener listener;
 
 
-    public CourseAdapter(Context context, ArrayList<CourseData> courseData, OnItemClickListener listener) {
+    public CourseAdapter(Context context, ArrayList<Course> courseData, OnItemClickListener listener) {
         this.context = context;
-        this.courseDatas = courseData;
+        this.courses = courseData;
         this.listener = listener;
 
     }
@@ -41,15 +41,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        final CourseData courseData = courseDatas.get(position);
-        Picasso.with(context).load(courseDatas.get(position).getImage()).resize(150, 100).centerInside().into(holder.image);
-        holder.txtTitle.setText(courseDatas.get(position).getTitle());
-        holder.txtTotalWord.setText(String.valueOf(courseDatas.get(position).getTotalWord()));
+        final Course course = courses.get(position);
+        Picasso.with(context).load(courses.get(position).getImage()).resize(150, 100).centerInside().into(holder.image);
+        holder.txtTitle.setText(courses.get(position).getTitle());
+        holder.txtTotalWord.setText(String.valueOf(courses.get(position).getNumberOfWords()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(courseData);
+                listener.onItemClick(course);
             }
         });
     }
@@ -57,7 +57,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return courseDatas.size();
+        return courses.size();
     }
 
 

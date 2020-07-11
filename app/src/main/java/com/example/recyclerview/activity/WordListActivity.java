@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.recyclerview.R;
 import com.example.recyclerview.adapter.TopicWordAdapter;
 import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
+import com.example.recyclerview.data.WordDAO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class TopicWordListActivity
+public class WordListActivity
         extends AppCompatActivity
         implements TopicWordAdapter.OnItemClickListener {
 
@@ -40,24 +40,48 @@ public class TopicWordListActivity
         setContentView(R.layout.activity_topic_word_list);
 
         final Intent intent = getIntent();
-        topicName = intent.getStringExtra(CourseTopicActivity.TOPIC_NAME);
+        topicName = intent.getStringExtra(TopicActivity.TOPIC_NAME);
 
         ((TextView) findViewById(R.id.tv_topic_name)).setText(topicName + " Topic");
 
-        RecyclerView recyclerView = findViewById(R.id.topicWordRecyclerview);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        topicWordAdapter = new TopicWordAdapter(
-                TopicWordListActivity.this,
-                getWordLists(topicName),
-                this
-        );
-        recyclerView.setAdapter(topicWordAdapter);
+        InitializeRecyclerView();
         setTitle(topicName);
 
         final View actionGroup = handleClickFloatingButton();
         handleLearningAndPracticeButtonClicked(actionGroup);
         handleFastLearningButtonClicked(actionGroup);
+        InitializeData();
+    }
+
+    private void InitializeRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.topicWordRecyclerview);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        topicWordAdapter = new TopicWordAdapter(
+                WordListActivity.this,
+                new ArrayList<Word>(),
+                this
+        );
+        recyclerView.setAdapter(topicWordAdapter);
+    }
+
+    private void InitializeData() {
+        topicWordAdapter.SetWordList(getWordLists(topicName));
+        handleProgressReport();
+    }
+
+    private void handleProgressReport() {
+        TextView progress = findViewById(R.id.tv_progress);
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        WordDAO wordDAO = new WordDAO(databaseHelper);
+        int totalWordsInThisTopic = wordDAO.getNumberOfWordsByCategory(topicName);
+        int totalLearnedWordsInThisTopic = wordDAO.getNumberOfLearnedWordsByCategory(topicName);
+        progress.setText(
+                "Learned words: "
+                + totalLearnedWordsInThisTopic
+                + "/"
+                + totalWordsInThisTopic
+        );
     }
 
     private View handleClickFloatingButton() {
@@ -77,41 +101,45 @@ public class TopicWordListActivity
         return actionGroup;
     }
 
-    private void handleFastLearningButtonClicked(View actionGroup) {
+    private void handleFastLearningButtonClicked(final View actionGroup) {
         actionGroup.findViewById(R.id.actionFastLearning).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TopicWordListActivity.this, "actionFastLearning", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(TopicWordListActivity.this, FastLearningActivity.class);
+                Intent intent = new Intent(WordListActivity.this, FastLearningActivity.class);
                 intent.putExtra(TOPIC, topicName);
                 startActivityForResult(intent, FAST_LEARNING_ACTIVITY);
+                actionGroup.setVisibility(View.INVISIBLE);
             }
         });
     }
 
-    private void handleLearningAndPracticeButtonClicked(View actionGroup) {
+    private void handleLearningAndPracticeButtonClicked(final View actionGroup) {
         actionGroup.findViewById(R.id.actionTraining).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TopicWordListActivity.this, "actionTraining", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(TopicWordListActivity.this, LearningAndPracticeActivity.class);
+                Intent intent = new Intent(WordListActivity.this, LearningAndPracticeActivity.class);
                 intent.putExtra(TOPIC, topicName);
                 startActivityForResult(intent, LEARNING_AND_PRACTICE_ACTIVITY);
+                actionGroup.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private ArrayList<Word> getWordLists(String topicName) {
-        // TODO: depend on topic name for deciding word category
-        Log.d(TopicWordListActivity.class.toString(), topicName);
+        Log.d(WordListActivity.class.toString(), topicName);
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.Context);
-        return databaseHelper.getWordsByCategory(topicName);
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        WordDAO wordDAO = new WordDAO(databaseHelper);
+        return wordDAO.getWordsByCategory(
+                topicName,
+                WordDAO.CORRECT_ANSWER_TIMES,
+                false
+        );
     }
 
     @Override
     public void onItemClick(Word word) {
-        Intent intent = new Intent(TopicWordListActivity.this, TopicWordDetailActivity.class);
+        Intent intent = new Intent(WordListActivity.this, WordDetailActivity.class);
         intent.putExtra(WORD_ID, word.getId());
         startActivity(intent);
     }
@@ -120,7 +148,7 @@ public class TopicWordListActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FAST_LEARNING_ACTIVITY) {
-            topicWordAdapter.SetWordList(getWordLists(topicName));
+            InitializeData();
         }
     }
 }

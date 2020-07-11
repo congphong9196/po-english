@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.recyclerview.R;
-import com.example.recyclerview.activity.MainActivity;
-import com.example.recyclerview.activity.TopicWordDetailActivity;
 
 import java.util.Locale;
 

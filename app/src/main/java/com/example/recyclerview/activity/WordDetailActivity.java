@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.example.recyclerview.R;
 import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
-import com.example.recyclerview.fragment.TopicWordDetailFragment;
+import com.example.recyclerview.data.WordDAO;
 
 import java.util.Locale;
 
@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-public class TopicWordDetailActivity extends AppCompatActivity {
+public class WordDetailActivity extends AppCompatActivity {
 
     private TextToSpeech textToSpeech;
     private TextView tvTopicWordName;
@@ -47,7 +47,7 @@ public class TopicWordDetailActivity extends AppCompatActivity {
                 if (status != TextToSpeech.ERROR) {
                     int result = textToSpeech.setLanguage(Locale.ENGLISH);
                 } else {
-                    Toast.makeText(TopicWordDetailActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WordDetailActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -78,13 +78,14 @@ public class TopicWordDetailActivity extends AppCompatActivity {
 
     private void getWordInIntent() {
         Intent intent = getIntent();
-        int wordId = intent.getIntExtra(TopicWordListActivity.WORD_ID, -1);
+        int wordId = intent.getIntExtra(WordListActivity.WORD_ID, -1);
         if (wordId == -1) {
             Toast.makeText(this, "Wrong word id", Toast.LENGTH_SHORT).show();
             return;
         }
-        DatabaseHelper helper = new DatabaseHelper(MainActivity.Context);
-        Word word = helper.getWordById(wordId);
+        DatabaseHelper helper = new DatabaseHelper(this);
+        WordDAO wordDAO = new WordDAO(helper);
+        Word word = wordDAO.getWordById(wordId);
         tvMean.setText(word.getMeaning());
         tvTopicWordName.setText(word.getValue());
         tvExample.setText(word.getExample());

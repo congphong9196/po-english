@@ -1,11 +1,12 @@
 package com.example.recyclerview.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.recyclerview.R;
 import com.example.recyclerview.adapter.OnItemClickListener;
-import com.example.recyclerview.data.CourseData;
+import com.example.recyclerview.data.Course;
 import com.example.recyclerview.data.DatabaseInitializer;
 import com.example.recyclerview.fragment.CourseFragment;
 
@@ -14,7 +15,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener {
     public static final String COURSE_DATA = "COURSE_DATA";
-    public static MainActivity Context;
+    public static Context Context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         setContentView(R.layout.activity_main);
         nextFragment(new CourseFragment(this), R.id.fragmentContent);
-        DatabaseInitializer.runInitialization(MainActivity.Context);
+
+        new DatabaseInitializer().runInitialization(this);
     }
 
     public void nextFragment(androidx.fragment.app.Fragment fragment, int id) {
@@ -34,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     @Override
-    public void onItemClick(CourseData courseData) {
-        Intent intent = new Intent(MainActivity.this, CourseTopicActivity.class);
-        intent.putExtra(COURSE_DATA, courseData.getTitle());
+    public void onItemClick(Course course) {
+        Intent intent = new Intent(MainActivity.this, TopicActivity.class);
+        intent.putExtra(COURSE_DATA, course.getTitle());
         startActivity(intent);
     }
 }

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.recyclerview.data.CourseTopic;
+import com.example.recyclerview.data.Topic;
 import com.example.recyclerview.R;
 
 import java.util.ArrayList;
@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CourseTopicAdapter extends RecyclerView.Adapter<CourseTopicAdapter.MyViewHolder> {
     private Context context;
-    private ArrayList<CourseTopic> courseTopics;
+    private ArrayList<Topic> topics;
     private OnItemClickListener listener;
 
-    public CourseTopicAdapter(Context context, ArrayList<CourseTopic> CourseTopics, OnItemClickListener listener) {
+    public CourseTopicAdapter(Context context, ArrayList<Topic> topics, OnItemClickListener listener) {
         this.context = context;
-        this.courseTopics = CourseTopics;
+        this.topics = topics;
         this.listener = listener;
     }
 
@@ -34,25 +34,25 @@ public class CourseTopicAdapter extends RecyclerView.Adapter<CourseTopicAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        final CourseTopic courseTopic = courseTopics.get(position);
-        holder.txtCourseName.setText(courseTopic.getCourseName());
-        holder.txtTopicName.setText(courseTopic.getTopicName());
-        holder.txtNumberOfWords.setText(courseTopic.getNumberOfWords() + " từ");
+        final Topic topic = topics.get(position);
+        holder.txtCourseName.setText(topic.getCourseName());
+        holder.txtTopicName.setText(topic.getName());
+        holder.txtNumberOfWords.setText(topic.getNumberOfWords() + " từ");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(courseTopic);
+                listener.onItemClick(topic);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return courseTopics.size();
+        return topics.size();
     }
 
     public interface OnItemClickListener {
-        void onItemClick(CourseTopic courseTopic);
+        void onItemClick(Topic topic);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

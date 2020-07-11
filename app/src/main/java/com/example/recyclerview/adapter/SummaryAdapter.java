@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHolder> {
     Context context;
-    ArrayList<SummaryData> summaryDatas ;
+    ArrayList<Word> words ;
 
 
-    public SummaryAdapter(Context context, ArrayList<SummaryData> summaryData) {
+    public SummaryAdapter(Context context, ArrayList<Word> words) {
         this.context = context;
-        this.summaryDatas = summaryData;
+        this.words = words;
     }
 
     @NonNull
@@ -36,15 +36,14 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        final SummaryData summaryData = summaryDatas.get(position);
-        holder.wordValue.setText(summaryData.getValue());
-        holder.wordMeaning.setText(summaryData.getMeaning());
-        //holder.correctAnswer.setText(words.get(position).getCorrectAnswer());
+        final Word word = words.get(position);
+        holder.wordValue.setText(word.getValue());
+        holder.wordMeaning.setText(word.getMeaning());
     }
 
     @Override
     public int getItemCount() {
-        return summaryDatas.size();
+        return words.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

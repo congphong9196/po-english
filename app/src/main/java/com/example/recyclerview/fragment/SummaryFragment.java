@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.recyclerview.adapter.SummaryAdapter;
-import com.example.recyclerview.data.SummaryData;
 import com.example.recyclerview.R;
 import com.example.recyclerview.data.Word;
 
@@ -21,22 +21,45 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SummaryFragment extends Fragment {
     private final OnSummaryFragmentNextListener listener;
-    private RecyclerView recyclerView;
-    private ArrayList<SummaryData> arrayListSummary;
+    private int numberOfCorrectWords;
+    private int numberOfWrongWords;
+    private ArrayList<Word> wrongWords;
 
-    public SummaryFragment(OnSummaryFragmentNextListener listener) {
+    public SummaryFragment(OnSummaryFragmentNextListener listener,
+                           int numberOfCorrectWords,
+                           int numberOfWrongWords,
+                           ArrayList<Word> wrongWords) {
         this.listener = listener;
+        this.numberOfCorrectWords = numberOfCorrectWords;
+        this.numberOfWrongWords = numberOfWrongWords;
+        this.wrongWords = wrongWords;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_summary, container, false);
-        recyclerView = v.findViewById(R.id.summaryRecyclerview);
+
+        TextView correctNumber = v.findViewById(R.id.tv_num_correct);
+        correctNumber.setText(String.valueOf(numberOfCorrectWords));
+
+        TextView wrongNumber = v.findViewById(R.id.tv_num_wrong);
+        wrongNumber.setText(String.valueOf(numberOfWrongWords));
+
+        handleRecyclerViewOfWrongWords(v);
+        handleNextButtonClicked(v);
+        return v;
+    }
+
+    private void handleRecyclerViewOfWrongWords(View v) {
+        RecyclerView recyclerView = v.findViewById(R.id.summaryRecyclerview);
         recyclerView.setHasFixedSize(true);
-        SummaryAdapter summaryAdapter = new SummaryAdapter(getContext(), arrayListSummary);
+        SummaryAdapter summaryAdapter = new SummaryAdapter(getContext(), wrongWords);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(summaryAdapter);
+    }
+
+    private void handleNextButtonClicked(View v) {
         Button button = v.findViewById(R.id.btnNext);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,20 +67,11 @@ public class SummaryFragment extends Fragment {
                 listener.OnSummaryFragmentNext();
             }
         });
-        return v;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        arrayListSummary = new ArrayList<>();
-        arrayListSummary.add(new SummaryData("Cat", "Con mèo"));
-        arrayListSummary.add(new SummaryData("Monkey", "Con khỉ"));
-        arrayListSummary.add(new SummaryData("Lion", "Con sư tủ"));
-        arrayListSummary.add(new SummaryData("Dog", "Con chó"));
-        arrayListSummary.add(new SummaryData("Snake", "Con rắn"));
-        arrayListSummary.add(new SummaryData("Bird", "Con chim"));
     }
     public interface OnSummaryFragmentNextListener {
         void OnSummaryFragmentNext();

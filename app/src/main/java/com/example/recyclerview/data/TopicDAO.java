@@ -1,6 +1,13 @@
 package com.example.recyclerview.data;
 
-public final class WordCategory {
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+
+public class TopicDAO {
     public static final String FAMILY = "FAMILY";
     public static final String ANIMAL = "ANIMAL";
     public static final String CLOTHES = "CLOTHES";
@@ -57,9 +64,59 @@ public final class WordCategory {
     public static final String MARKETING = "MARKETING";
     public static final String ACCOUNTING = "ACCOUNTING";
     public static final String MOVIES = "MOVIES";
+    public static final String TABLE_NAME = "topic";
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String COURSE_ID = "course_id";
+    private final DatabaseHelper databaseHelper;
 
+    public static TopicDAO fromContext(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        return new TopicDAO(databaseHelper);
+    }
 
-    // If you have only static members and want to simulate a static
-    // class in Java, then you can make the constructor private.
-    private WordCategory() {}
+    public TopicDAO(DatabaseHelper databaseHelper) {
+        this.databaseHelper = databaseHelper;
+    }
+
+    public ContentValues getContentValues(Topic topic) {
+        ContentValues values = new ContentValues();
+        values.put(ID, topic.getId());
+        values.put(COURSE_ID, topic.getCourseId());
+        values.put(NAME, topic.getName());
+        return values;
+    }
+
+    private void addTopic(Topic topic, SQLiteDatabase db) {
+        ContentValues values = getContentValues(topic);
+        db.insert(TABLE_NAME, null, values);
+    }
+
+    public void addTopics(ArrayList<Topic> topics) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (Topic topic : topics) {
+            addTopic(topic, db);
+        }
+        db.close();
+    }
+
+    public ArrayList<Topic> getTopicsByCourseId(int courseId) {
+        ArrayList<Topic> topics = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " where " + COURSE_ID + "=" + courseId;
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                topics.add(new Topic(
+                    cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getString(2)
+                ));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return topics;
+    }
 }

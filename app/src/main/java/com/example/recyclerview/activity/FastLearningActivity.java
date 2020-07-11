@@ -9,8 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.recyclerview.R;
+import com.example.recyclerview.data.ConstSaveData;
 import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
+import com.example.recyclerview.data.WordDAO;
 import com.example.recyclerview.fragment.ChooseAnswerFragment;
 import com.example.recyclerview.fragment.ListeningFragment;
 import com.example.recyclerview.fragment.SpeechToTextFragment;
@@ -43,6 +45,10 @@ public class FastLearningActivity
     int currentLearningWord = 0;
     int wrongTimes = 0;
     DatabaseHelper databaseHelper;
+    WordDAO wordDAO;
+    private int numberOfCorrectWords = 0;
+    private int numberOfWrongWords = 0;
+    private ArrayList<Word> wrongWords = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,9 @@ public class FastLearningActivity
         setContentView(R.layout.activity_training);
         settingUpActionBar();
 
-        topicName = getIntent().getStringExtra(TopicWordListActivity.TOPIC);
-        databaseHelper = new DatabaseHelper(MainActivity.Context);
+        topicName = getIntent().getStringExtra(WordListActivity.TOPIC);
+        databaseHelper = new DatabaseHelper(this);
+        wordDAO = new WordDAO(databaseHelper);
 
         setupWords();
         nextFragment(createChooseAnswerFragment(), R.id.trainingFragmentLayout);
@@ -59,13 +66,20 @@ public class FastLearningActivity
 
     class WordCorrectionTimeComparator implements Comparator<Word> {
         public int compare(Word s1, Word s2) {
+            if (s1.getCorrectAnswerTimes() < ConstSaveData.NUMBER_CORRECT_TIME_TO_BE_LEARNED &&
+                s2.getCorrectAnswerTimes() < ConstSaveData.NUMBER_CORRECT_TIME_TO_BE_LEARNED) {
+                // If that words are not learned, we still want to make question
+                // about that word for learning again
+                return 0;
+            }
             return Integer.compare(s1.getCorrectAnswerTimes(), s2.getCorrectAnswerTimes());
         }
     }
 
     private void setupWords() {
-        DatabaseHelper helper = new DatabaseHelper(MainActivity.Context);
-        words = helper.getWordsByCategory(topicName);
+        DatabaseHelper helper = new DatabaseHelper(this);
+        WordDAO wordDAO = new WordDAO(helper);
+        words = wordDAO.getWordsByCategory(topicName);
         Collections.sort(words, new WordCorrectionTimeComparator());
         learningWords = new ArrayList<>();
         for (int i = 9; i >= 0; i--) {
@@ -78,7 +92,7 @@ public class FastLearningActivity
         if (currentLearningWord >= learningWords.size()) {
             return null;
         }
-        ArrayList<Word> words = databaseHelper.getWordsByCategory(topicName);
+        ArrayList<Word> words = wordDAO.getWordsByCategory(topicName);
         if (words.size() < 4) {
             return null;
         }
@@ -96,12 +110,16 @@ public class FastLearningActivity
 
     public void nextFragment(androidx.fragment.app.Fragment fragment, int id) {
         if (fragment == null || wrongTimes >= 3) {
-            fragment = new SummaryFragment(this);
+            fragment = createSummaryFragment();
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(id, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
+    }
+
+    private SummaryFragment createSummaryFragment() {
+        return new SummaryFragment(this, numberOfCorrectWords, numberOfWrongWords, wrongWords);
     }
 
     @Override
@@ -114,9 +132,6 @@ public class FastLearningActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Toast.makeText(
-                    getApplicationContext(), "Clicked on ActionBar",
-                    Toast.LENGTH_SHORT).show();
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -124,7 +139,7 @@ public class FastLearningActivity
 
     @Override
     public void OnSummaryFragmentNext() {
-        nextFragment(createChooseAnswerFragment(), R.id.trainingFragmentLayout);
+        finish();
     }
 
     @Override
@@ -137,10 +152,15 @@ public class FastLearningActivity
                 }
             });
         }
+
+        Word currentWord = learningWords.get(currentLearningWord);
         if (isCorrect) {
-            Word currentWord = learningWords.get(currentLearningWord);
             currentWord.setCorrectAnswerTimes(currentWord.getCorrectAnswerTimes() + 1);
-            databaseHelper.updateWord(currentWord);
+            wordDAO.updateWord(currentWord);
+            numberOfCorrectWords++;
+        } else {
+            numberOfWrongWords++;
+            wrongWords.add(currentWord);
         }
         currentLearningWord++;
         nextFragment(createChooseAnswerFragment(), R.id.trainingFragmentLayout);
@@ -198,7 +218,7 @@ public class FastLearningActivity
     }
     @Override
     public void OnSpeechFragmentNext() {
-        nextFragment(new SummaryFragment(this), R.id.trainingFragmentLayout);
+        nextFragment(createSummaryFragment(), R.id.trainingFragmentLayout);
     }
 
     private void speak() {

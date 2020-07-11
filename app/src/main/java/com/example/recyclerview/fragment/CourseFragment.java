@@ -7,8 +7,13 @@ import android.view.ViewGroup;
 
 import com.example.recyclerview.adapter.CourseAdapter;
 import com.example.recyclerview.adapter.OnItemClickListener;
-import com.example.recyclerview.data.CourseData;
+import com.example.recyclerview.data.Course;
 import com.example.recyclerview.R;
+import com.example.recyclerview.data.CourseDAO;
+import com.example.recyclerview.data.DatabaseHelper;
+import com.example.recyclerview.data.Topic;
+import com.example.recyclerview.data.TopicDAO;
+import com.example.recyclerview.data.WordDAO;
 
 import java.util.ArrayList;
 
@@ -19,18 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CourseFragment extends Fragment {
-    public static final String BASIC_ENGLISH = "Basic English";
-    public static final String ENGLISH_FOR_CHILDREN = "English for Children";
-    public static final String ENGLISH_FOR_HIGH_SCHOOL = "English for High School";
-    public static final String ENGLISH_FOR_OFFICE = "English for Office";
-    public static final String ENGLISH_FOR_PROGRAMMING = "English for Programming";
-    public static final String ENGLISH_FOR_TRAVEL = "English for Travel";
-    public static final String IELTS = "Ielts";
-    public static final String TOEIC = "Toeic";
-
     View v;
     private RecyclerView recyclerView;
-    private ArrayList<CourseData> arrayListCourse;
+    private ArrayList<Course> arrayListCourse;
     OnItemClickListener listener;
 
     public CourseFragment(OnItemClickListener listener) {
@@ -53,15 +49,23 @@ public class CourseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        arrayListCourse = calculateNumberOfWordsInEachCourse();
+    }
 
-        arrayListCourse = new ArrayList<>();
-        arrayListCourse.add(new CourseData(R.drawable.icon_tienganhcoban, BASIC_ENGLISH, 300));
-        arrayListCourse.add(new CourseData(R.drawable.icon_tienganhtreem, ENGLISH_FOR_CHILDREN, 470));
-        arrayListCourse.add(new CourseData(R.drawable.icon_tienganhtrunghocphothong, ENGLISH_FOR_HIGH_SCHOOL, 380));
-        arrayListCourse.add(new CourseData(R.drawable.icon_tienganhvanphong, ENGLISH_FOR_OFFICE, 300));
-        arrayListCourse.add(new CourseData(R.drawable.icon_tienganhlaptrinh, ENGLISH_FOR_PROGRAMMING, 550));
-        arrayListCourse.add(new CourseData(R.drawable.icon_tienganhdulich, ENGLISH_FOR_TRAVEL, 500));
-        arrayListCourse.add(new CourseData(R.drawable.icon_ielts, IELTS, 500));
-        arrayListCourse.add(new CourseData(R.drawable.icon_toeic, TOEIC, 400));
+    private ArrayList<Course> calculateNumberOfWordsInEachCourse() {
+        CourseDAO courseDAO = CourseDAO.fromContext(getActivity());
+        ArrayList<Course> allCourses = courseDAO.getAllCourses();
+
+        TopicDAO topicDAO = TopicDAO.fromContext(getActivity());
+        WordDAO wordDAO = WordDAO.fromContext(getActivity());
+        for (Course course : allCourses) {
+            int numberOfWords = 0;
+            ArrayList<Topic> topics = topicDAO.getTopicsByCourseId(course.getId());
+            for (Topic topic : topics) {
+                numberOfWords += wordDAO.getNumberOfWordsByCategory(topic.getName());
+            }
+            course.setNumberOfWords(numberOfWords);
+        }
+        return allCourses;
     }
 }

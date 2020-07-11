@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import com.example.recyclerview.activity.MainActivity;
 
 public class ConstSaveData {
+    public static int NUMBER_CORRECT_TIME_TO_BE_LEARNED = 5;
     public static String  DADATNHACNHO = "DADATNHACNHO";
 
     public static String GIADINH_POSITIONDAHOC = "GIADINH_POSITIONDAHOC";

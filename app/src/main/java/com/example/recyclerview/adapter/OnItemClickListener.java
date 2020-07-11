@@ -1,9 +1,9 @@
 package com.example.recyclerview.adapter;
 
-import com.example.recyclerview.data.CourseData;
+import com.example.recyclerview.data.Course;
 
 public interface OnItemClickListener {
-    void onItemClick(CourseData courseData);
+    void onItemClick(Course course);
 
     // onItemClickListener(CourseTopic courseTopic);
 }
