@@ -22,6 +22,11 @@
             android:layout_marginBottom="3dp">
 
         </FrameLayout>
+
+        <ProgressBar
+            android:id="@+id/database_loading_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 

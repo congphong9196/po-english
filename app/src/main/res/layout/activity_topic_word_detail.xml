@@ -44,15 +44,6 @@
         android:layout_below="@id/tv_mean"
         />
 
-    <ImageButton
-        android:id="@+id/image_btnSpeaker3"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@id/tv_mean"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_volume" />
-
     <LinearLayout
         android:id="@+id/linear_detail"
         android:layout_width="match_parent"

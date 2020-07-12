@@ -1,6 +1,8 @@
 package com.example.recyclerview.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
 import com.example.recyclerview.data.WordDAO;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
@@ -28,8 +31,6 @@ public class WordDetailActivity extends AppCompatActivity {
     private TextView tvTopicWordName;
     private TextView tvExample;
     private TextView tvMean;
-    private ImageButton imgButtonSpeaker;
-    private Button btnNext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,34 +41,35 @@ public class WordDetailActivity extends AppCompatActivity {
         tvExample = findViewById(R.id.tv_sentence);
         tvMean = findViewById(R.id.tv_mean);
 
-        imgButtonSpeaker = findViewById(R.id.image_btnSpeaker);
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    int result = textToSpeech.setLanguage(Locale.ENGLISH);
+                    textToSpeech.setLanguage(Locale.ENGLISH);
                 } else {
                     Toast.makeText(WordDetailActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        speakWord();
-
-        btnNext = findViewById(R.id.btnNext);
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+        handleSpeakerClicked();
+        handleButtonNextClicked();
         settingActionBar();
-
         getWordInIntent();
     }
 
-    private void speakWord() {
+    private void handleButtonNextClicked() {
+        Button btnNext = findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(WordDetailActivity.this, "Click to NEXT", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void handleSpeakerClicked() {
+        ImageButton imgButtonSpeaker = findViewById(R.id.image_btnSpeaker);
         imgButtonSpeaker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,8 +121,12 @@ public class WordDetailActivity extends AppCompatActivity {
 
     private void speak() {
         String text = tvTopicWordName.getText().toString().trim();
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ttsGreater21(text);
+        } else {
+            ttsUnder20(text);
+        }
     }
 
     @Override
@@ -132,6 +138,18 @@ public class WordDetailActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @SuppressWarnings("deprecation")
+    private void ttsUnder20(String text) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, map);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void ttsGreater21(String text) {
+        String utteranceId=this.hashCode() + "";
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+    }
 
     public void nextFragment(androidx.fragment.app.Fragment fragment, int id) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

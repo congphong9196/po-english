@@ -70,13 +70,13 @@ public class TopicInitializer implements DataInitializable {
         int courseId = course.getId();
 
         ArrayList<Topic> arrayListHighSchoolEnglish = new ArrayList<>();
-        arrayListHighSchoolEnglish.add(new Topic(courseId, "English class 6"));
-        arrayListHighSchoolEnglish.add(new Topic(courseId, "English class 7"));
-        arrayListHighSchoolEnglish.add(new Topic(courseId, "English class 8"));
-        arrayListHighSchoolEnglish.add(new Topic(courseId, "English class 9"));
-        arrayListHighSchoolEnglish.add(new Topic(courseId, "English class 10"));
-        arrayListHighSchoolEnglish.add(new Topic(courseId, "English class 11"));
-        arrayListHighSchoolEnglish.add(new Topic(courseId, "English class 12"));
+        arrayListHighSchoolEnglish.add(new Topic(courseId, TopicDAO.CLASS6));
+        arrayListHighSchoolEnglish.add(new Topic(courseId, TopicDAO.CLASS7));
+        arrayListHighSchoolEnglish.add(new Topic(courseId, TopicDAO.CLASS8));
+        arrayListHighSchoolEnglish.add(new Topic(courseId, TopicDAO.CLASS9));
+        arrayListHighSchoolEnglish.add(new Topic(courseId, TopicDAO.CLASS10));
+        arrayListHighSchoolEnglish.add(new Topic(courseId, TopicDAO.CLASS11));
+        arrayListHighSchoolEnglish.add(new Topic(courseId, TopicDAO.CLASS12));
         return arrayListHighSchoolEnglish;
     }
 
@@ -87,13 +87,13 @@ public class TopicInitializer implements DataInitializable {
         int courseId = course.getId();
 
         ArrayList<Topic> arrayListOfficeEnglish = new ArrayList<>();
-        arrayListOfficeEnglish.add(new Topic(courseId, "Position"));
-        arrayListOfficeEnglish.add(new Topic(courseId, "Department"));
-        arrayListOfficeEnglish.add(new Topic(courseId, "Office supplies"));
-        arrayListOfficeEnglish.add(new Topic(courseId, "Benefit"));
-        arrayListOfficeEnglish.add(new Topic(courseId, "Conference"));
-        arrayListOfficeEnglish.add(new Topic(courseId, "Machines"));
-        arrayListOfficeEnglish.add(new Topic(courseId, "Common"));
+        arrayListOfficeEnglish.add(new Topic(courseId, TopicDAO.POSITION));
+        arrayListOfficeEnglish.add(new Topic(courseId, TopicDAO.DEPARTMENT));
+        arrayListOfficeEnglish.add(new Topic(courseId, TopicDAO.SUPPLY));
+        arrayListOfficeEnglish.add(new Topic(courseId, TopicDAO.BENEFIT));
+        arrayListOfficeEnglish.add(new Topic(courseId, TopicDAO.CONFERENCE));
+        arrayListOfficeEnglish.add(new Topic(courseId, TopicDAO.MACHINES));
+        arrayListOfficeEnglish.add(new Topic(courseId, TopicDAO.COMMON));
         return arrayListOfficeEnglish;
     }
 
@@ -104,12 +104,12 @@ public class TopicInitializer implements DataInitializable {
         int courseId = course.getId();
 
         ArrayList<Topic> arrayListProgrammingEnglish = new ArrayList<>();
-        arrayListProgrammingEnglish.add(new Topic(courseId, "Computer structure"));
-        arrayListProgrammingEnglish.add(new Topic(courseId, "Jobs"));
-        arrayListProgrammingEnglish.add(new Topic(courseId, "Peripherals"));
-        arrayListProgrammingEnglish.add(new Topic(courseId, "Meeting"));
-        arrayListProgrammingEnglish.add(new Topic(courseId, "Machines"));
-        arrayListProgrammingEnglish.add(new Topic(courseId, "Technology"));
+        arrayListProgrammingEnglish.add(new Topic(courseId, TopicDAO.STRUCTURE));
+        arrayListProgrammingEnglish.add(new Topic(courseId, TopicDAO.JOBS));
+        arrayListProgrammingEnglish.add(new Topic(courseId, TopicDAO.PERIPHERALS));
+        arrayListProgrammingEnglish.add(new Topic(courseId, TopicDAO.MEETING));
+        arrayListProgrammingEnglish.add(new Topic(courseId, TopicDAO.EQUIPMENT));
+        arrayListProgrammingEnglish.add(new Topic(courseId, TopicDAO.TECHNOLOGY));
         return arrayListProgrammingEnglish;
     }
 
@@ -120,11 +120,11 @@ public class TopicInitializer implements DataInitializable {
         int courseId = course.getId();
 
         ArrayList<Topic> arrayListTravelEnglish = new ArrayList<>();
-        arrayListTravelEnglish.add(new Topic(courseId, "Tour guide"));
-        arrayListTravelEnglish.add(new Topic(courseId, "Travel agency"));
-        arrayListTravelEnglish.add(new Topic(courseId, "Hotel"));
-        arrayListTravelEnglish.add(new Topic(courseId, "Sea"));
-        arrayListTravelEnglish.add(new Topic(courseId, "Planes"));
+        arrayListTravelEnglish.add(new Topic(courseId, TopicDAO.TOUR_GUIDE));
+        arrayListTravelEnglish.add(new Topic(courseId, TopicDAO.AGENCY));
+        arrayListTravelEnglish.add(new Topic(courseId, TopicDAO.HOTEL));
+        arrayListTravelEnglish.add(new Topic(courseId, TopicDAO.SEA));
+        arrayListTravelEnglish.add(new Topic(courseId, TopicDAO.PLANE));
         return arrayListTravelEnglish;
     }
 
@@ -135,11 +135,11 @@ public class TopicInitializer implements DataInitializable {
         int courseId = course.getId();
 
         ArrayList<Topic> arrayListIeltsEnglish = new ArrayList<>();
-        arrayListIeltsEnglish.add(new Topic(courseId, "Overview"));
-        arrayListIeltsEnglish.add(new Topic(courseId, "Listening"));
-        arrayListIeltsEnglish.add(new Topic(courseId, "Speaking"));
-        arrayListIeltsEnglish.add(new Topic(courseId, "Reading"));
-        arrayListIeltsEnglish.add(new Topic(courseId, "Writing"));
+        arrayListIeltsEnglish.add(new Topic(courseId, TopicDAO.OVERVIEW));
+        arrayListIeltsEnglish.add(new Topic(courseId, TopicDAO.LISTENING));
+        arrayListIeltsEnglish.add(new Topic(courseId, TopicDAO.SPEAKING));
+        arrayListIeltsEnglish.add(new Topic(courseId, TopicDAO.READING));
+        arrayListIeltsEnglish.add(new Topic(courseId, TopicDAO.WRITING));
         return arrayListIeltsEnglish;
     }
 
@@ -150,11 +150,11 @@ public class TopicInitializer implements DataInitializable {
         int courseId = course.getId();
 
         ArrayList<Topic> arrayListToeicEnglish = new ArrayList<>();
-        arrayListToeicEnglish.add(new Topic(courseId, "Contracts"));
-        arrayListToeicEnglish.add(new Topic(courseId, "Shopping"));
-        arrayListToeicEnglish.add(new Topic(courseId, "Marketing"));
-        arrayListToeicEnglish.add(new Topic(courseId, "Movies"));
-        arrayListToeicEnglish.add(new Topic(courseId, "Accounting"));
+        arrayListToeicEnglish.add(new Topic(courseId, TopicDAO.CONTRACTS));
+        arrayListToeicEnglish.add(new Topic(courseId, TopicDAO.SHOPPING));
+        arrayListToeicEnglish.add(new Topic(courseId, TopicDAO.MARKETING));
+        arrayListToeicEnglish.add(new Topic(courseId, TopicDAO.MOVIES));
+        arrayListToeicEnglish.add(new Topic(courseId, TopicDAO.ACCOUNTING));
         return arrayListToeicEnglish;
     }
 }

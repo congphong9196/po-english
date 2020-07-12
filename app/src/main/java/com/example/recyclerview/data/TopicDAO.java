@@ -43,6 +43,7 @@ public class TopicDAO {
     public static final String BENEFIT = "BENEFIT";
     public static final String CONFERENCE = "CONFERENCE";
     public static final String MACHINES = "MACHINES";
+    public static final String COMMON = "COMMON";
     public static final String STRUCTURE = "STRUCTURE";
     public static final String JOBS = "JOBS";
     public static final String PERIPHERALS = "PERIPHERALS";

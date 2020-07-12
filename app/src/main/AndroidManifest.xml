@@ -9,13 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.WordDetailActivity"/>
-        <activity android:name=".activity.FastLearningActivity"/>
+        <activity android:name=".activity.SettingActivity"></activity>
+        <activity android:name=".activity.WordDetailActivity" />
+        <activity android:name=".activity.FastLearningActivity" />
         <activity android:name=".activity.WordListActivity" />
         <activity android:name=".activity.LearningAndPracticeActivity" />
         <activity android:name=".activity.TopicActivity" />
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.RemindActivity">
+        <activity android:name=".activity.RemindActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

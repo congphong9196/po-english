@@ -37,7 +37,7 @@ public class CourseTopicAdapter extends RecyclerView.Adapter<CourseTopicAdapter.
         final Topic topic = topics.get(position);
         holder.txtCourseName.setText(topic.getCourseName());
         holder.txtTopicName.setText(topic.getName());
-        holder.txtNumberOfWords.setText(topic.getNumberOfWords() + " từ");
+        holder.txtNumberOfWords.setText(topic.getNumberOfWords() + " word");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

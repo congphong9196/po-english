@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:menu="@menu/main">
+    tools:menu="@menu/fast_learning_menu">
 
     <LinearLayout
         android:layout_width="match_parent"

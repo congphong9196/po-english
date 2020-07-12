@@ -2,6 +2,8 @@ package com.example.recyclerview.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.recyclerview.adapter.CourseTopicAdapter;
 import com.example.recyclerview.data.Course;
@@ -39,6 +41,8 @@ public class TopicActivity extends AppCompatActivity implements CourseTopicAdapt
     public static final String RESTAURANT = "Restaurant";
     public static final String ADJECTIVE = "Adjective";
     public static final String ACTION = "Action";
+
+    private static final int SETTING_ACTIVITY_REQUEST = 1000;
 
 
     @Override
@@ -78,5 +82,20 @@ public class TopicActivity extends AppCompatActivity implements CourseTopicAdapt
         Intent intent = new Intent(TopicActivity.this, WordListActivity.class);
         intent.putExtra(TOPIC_NAME, topic.getName());
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_setting) {
+            Intent intent = new Intent(TopicActivity.this, SettingActivity.class);
+            startActivityForResult(intent, TopicActivity.SETTING_ACTIVITY_REQUEST);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

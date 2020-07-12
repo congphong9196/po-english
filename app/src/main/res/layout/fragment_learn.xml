@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.LearningAndPracticeActivity"
-    tools:menu="@menu/main"
+    tools:menu="@menu/fast_learning_menu"
     android:id="@+id/learningFragment">
 
     <LinearLayout

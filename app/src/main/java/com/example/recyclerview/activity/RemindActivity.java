@@ -12,9 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.recyclerview.data.ConstSaveData;
 import com.example.recyclerview.notification.NotificationReceiver;
 import com.example.recyclerview.R;
 
@@ -22,84 +20,132 @@ import java.util.Calendar;
 
 public class RemindActivity extends AppCompatActivity {
 
-    private Button btnDone;
-    private TextView txtIgnore;
+    class RemindTime {
+        private int hour;
+        private int minute;
+
+        RemindTime(int hour, int minute) {
+            this.hour = hour;
+            this.minute = minute;
+        }
+
+        public int getHour() {
+            return hour;
+        }
+
+        public void setHour(int hour) {
+            this.hour = hour;
+        }
+
+        public int getMinute() {
+            return minute;
+        }
+
+        public void setMinute(int minute) {
+            this.minute = minute;
+        }
+    }
+
+    public static final String REMIND_HOURS_MINUTE = "RemindActivity.REMIND_HOURS_MINUTE";
+    public static final String ALREADY_SET_REMIND = "RemindActivity.ALREADY_SET_REMIND";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_remind);
 
-        btnDone = (Button) findViewById(R.id.btnDone);
-        txtIgnore = (TextView) findViewById(R.id.txtIgnore);
+        settingForNumberPicker();
+        handleWhenButtonDoneClicked();
+        handleWhenButtonIgnoreClicked();
+    }
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String hoursMinute = sharedPreferences.getString("Remind", "");
-        int hours = 0, minute = 0;
-        if (!hoursMinute.equals("")) {
-            String[] split = hoursMinute.trim().split("\\|");
-            hours = Integer.parseInt(split[0].trim());
-            minute = Integer.parseInt(split[1].trim());
-        }
-
-        final NumberPicker txtHours = (NumberPicker) findViewById(R.id.txtHours);
+    private void settingForNumberPicker() {
+        RemindTime remindTime = getRemindTimeFromSavedPreference();
+        NumberPicker txtHours = findViewById(R.id.txtHours);
         txtHours.setMaxValue(23);
         txtHours.setMinValue(0);
-        txtHours.setValue(hours);
+        txtHours.setValue(remindTime.getHour());
 
-        final NumberPicker txtMinute = (NumberPicker) findViewById(R.id.txtMinute);
+        NumberPicker txtMinute = findViewById(R.id.txtMinute);
         txtMinute.setMaxValue(59);
         txtMinute.setMinValue(0);
-        txtMinute.setValue(minute);
+        txtMinute.setValue(remindTime.getMinute());
+    }
 
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor =
-                        PreferenceManager.getDefaultSharedPreferences(RemindActivity.this).edit();
-                editor.putString("Remind", txtHours.getValue() + "|" + txtMinute.getValue());
-                editor.apply();
+    private RemindTime getRemindTimeFromSavedPreference() {
+        RemindTime remindTime = new RemindTime(0, 0);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String hoursMinute = sharedPreferences.getString(REMIND_HOURS_MINUTE, "");
+        if (hoursMinute != null && !hoursMinute.equals("")) {
+            String[] split = hoursMinute.trim().split("\\|");
+            remindTime.setHour(Integer.parseInt(split[0].trim()));
+            remindTime.setMinute(Integer.parseInt(split[1].trim()));
+        }
+        return remindTime;
+    }
 
-                //alarm nhắc nhở
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, txtHours.getValue());
-                calendar.set(Calendar.MINUTE, txtMinute.getValue());
-                //calendar.set(Calendar.SECOND, 0);
-
-                Intent intent = new Intent(RemindActivity.this, NotificationReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(RemindActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmManager = (AlarmManager) RemindActivity.this.getSystemService(ALARM_SERVICE);
-                if (alarmManager != null) {
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-                }
-                Toast.makeText(RemindActivity.this, "Save successfully!", Toast.LENGTH_SHORT).show();
-
-                SaveDataTypeNumberByName(ConstSaveData.DADATNHACNHO, 1);
-
-                Intent intentMain = new Intent(RemindActivity.this, MainActivity.class);
-                startActivity(intentMain);
-
-            }
-
-        });
+    private void handleWhenButtonIgnoreClicked() {
+        TextView txtIgnore = findViewById(R.id.txtIgnore);
         txtIgnore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RemindActivity.this,MainActivity.class);
-                startActivity(intent);
+                goBackActivity();
             }
         });
     }
-    private int GetDataTypeNumberByName(String NameData, int ValueDefault){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        int value = sp.getInt(NameData, ValueDefault);
-        return value;
+
+    private void handleWhenButtonDoneClicked() {
+        Button btnDone = findViewById(R.id.btnDone);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NumberPicker txtHours = findViewById(R.id.txtHours);
+                NumberPicker txtMinute = findViewById(R.id.txtMinute);
+                saveRemindHoursAndMinuteForSettingLater(txtHours, txtMinute);
+                createAlarmForLearning(txtHours, txtMinute);
+                saveDataTypeNumberByName(ALREADY_SET_REMIND, true);
+                goBackActivity();
+            }
+        });
     }
 
-    private void SaveDataTypeNumberByName(String NameData, int value){
+    private void saveRemindHoursAndMinuteForSettingLater(NumberPicker txtHours, NumberPicker txtMinute) {
         SharedPreferences.Editor editor =
-                PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putInt(NameData, value);
+                PreferenceManager.getDefaultSharedPreferences(RemindActivity.this).edit();
+        editor.putString(REMIND_HOURS_MINUTE, txtHours.getValue() + "|" + txtMinute.getValue());
+        editor.apply();
+    }
+
+    private void createAlarmForLearning(NumberPicker txtHours, NumberPicker txtMinute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, txtHours.getValue());
+        calendar.set(Calendar.MINUTE, txtMinute.getValue());
+
+        Intent intent = new Intent(RemindActivity.this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                RemindActivity.this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        AlarmManager alarmManager = (AlarmManager) RemindActivity.this.getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent
+            );
+        }
+    }
+
+    private void goBackActivity() {
+        finish();
+    }
+
+    private void saveDataTypeNumberByName(String dataName, boolean value){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putBoolean(dataName, value);
         editor.apply();
     }
 }

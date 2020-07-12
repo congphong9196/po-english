@@ -3,6 +3,8 @@ package com.example.recyclerview.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,7 +30,8 @@ public class WordListActivity
     public static final String WORD_ID = "word_id";
     public static final String TOPIC = "TopicWordListActivity.TOPIC";
     public static final String COURSE = "TopicWordListActivity.COURSE";
-    private static final int LEARNING_AND_PRACTICE_ACTIVITY = 1000;
+    private static final int SETTING_ACTIVITY_REQUEST = 1000;
+    private static final int LEARNING_AND_PRACTICE_ACTIVITY = 1002;
     private static final int FAST_LEARNING_ACTIVITY = 1001;
 
     String topicName;
@@ -68,6 +71,21 @@ public class WordListActivity
     private void InitializeData() {
         topicWordAdapter.SetWordList(getWordLists(topicName));
         handleProgressReport();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_setting) {
+            Intent intent = new Intent(WordListActivity.this, SettingActivity.class);
+            startActivityForResult(intent, WordListActivity.SETTING_ACTIVITY_REQUEST);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void handleProgressReport() {

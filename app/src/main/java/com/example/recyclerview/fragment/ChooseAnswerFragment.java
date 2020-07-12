@@ -142,7 +142,7 @@ public class ChooseAnswerFragment extends Fragment {
         }
         boolean isCorrect;
         if (tv.getTag() != null) {
-            Toast.makeText(getActivity(), "Dap an dung", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Correct answer", Toast.LENGTH_SHORT).show();
             tv.setBackgroundColor(Color.rgb(0, 220, 0));
             isCorrect = true;
         } else {
