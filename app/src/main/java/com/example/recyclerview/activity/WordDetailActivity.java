@@ -18,7 +18,9 @@ import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
 import com.example.recyclerview.data.WordDAO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
@@ -27,12 +29,16 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class WordDetailActivity extends AppCompatActivity {
 
+    private Menu mOptionsMenu;
     private TextToSpeech textToSpeech;
     private TextView tvTopicWordName;
     private TextView tvExample;
     private TextView tvMean;
     private DatabaseHelper helper = new DatabaseHelper(this);
     private int wordId;
+    private String topicName;
+    private ArrayList<Word> words = new ArrayList<>();
+    private int wordIndex = -1;
 
 
     @Override
@@ -55,11 +61,34 @@ public class WordDetailActivity extends AppCompatActivity {
             }
         });
 
+        Word word = getWordInIntent();
+        if (word == null) {
+            return;
+        }
+        topicName = word.getWordCategory();
+
+        boolean success = findWordsAndWordIndex(word);
+        if (!success) return;
+
         handleSpeakerClicked();
         settingActionBar();
-        getWordInIntent();
         handleButtonNextClicked();
+    }
 
+    private boolean findWordsAndWordIndex(Word word) {
+        WordDAO wordDAO = new WordDAO(helper);
+        words = wordDAO.getWordsByCategory(topicName);
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).getId() == word.getId()) {
+                wordIndex = i;
+                break;
+            }
+        }
+        if (wordIndex == -1) {
+            Toast.makeText(this, "[ERROR] Wrong word id", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void handleButtonNextClicked() {
@@ -67,14 +96,26 @@ public class WordDetailActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wordId += 1;
-                WordDAO wordDAO = new WordDAO(helper);
-                Word word = wordDAO.getWordById(wordId);
+                Word word;
+                wordIndex++;
+                if (wordIndex >= words.size()) {
+                    finish();
+                    return;
+                }
+                word = words.get(wordIndex);
+
                 tvMean.setText(word.getMeaning());
                 tvTopicWordName.setText(word.getValue());
                 tvExample.setText(word.getExample());
+
+                updateProgress();
             }
         });
+    }
+
+    private void updateProgress() {
+        MenuItem menuItem = mOptionsMenu.findItem(R.id.progress_text);
+        menuItem.setTitle(wordIndex + "/" + words.size());
     }
 
     private void handleSpeakerClicked() {
@@ -87,18 +128,19 @@ public class WordDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void getWordInIntent() {
+    private Word getWordInIntent() {
         Intent intent = getIntent();
         wordId = intent.getIntExtra(WordListActivity.WORD_ID, -1);
         if (wordId == -1) {
             Toast.makeText(this, "Wrong word id", Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
         WordDAO wordDAO = new WordDAO(helper);
         Word word = wordDAO.getWordById(wordId);
         tvMean.setText(word.getMeaning());
         tvTopicWordName.setText(word.getValue());
         tvExample.setText(word.getExample());
+        return word;
     }
 
     private void settingActionBar() {
@@ -113,15 +155,14 @@ public class WordDetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topic_word_detail, menu);
+        mOptionsMenu = menu;
+        updateProgress();
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Toast.makeText(
-                    getApplicationContext(), "Clicked on ActionBar",
-                    Toast.LENGTH_SHORT).show();
             finish();
         }
         return super.onOptionsItemSelected(item);

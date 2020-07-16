@@ -1,60 +1,144 @@
 package com.example.recyclerview.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
 import com.example.recyclerview.data.WordDAO;
-import com.example.recyclerview.fragment.LearningAndTrainingFragment;
 import com.example.recyclerview.fragment.LearningFragment;
 import com.example.recyclerview.R;
 import com.example.recyclerview.fragment.ListeningFragment;
 import com.example.recyclerview.fragment.SpeechToTextFragment;
-import com.example.recyclerview.fragment.SummaryFragment;
 import com.example.recyclerview.fragment.WritingFragment;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class LearningAndPracticeActivity
-        extends AppCompatActivity
-        implements
-        LearningFragment.OnLearningFragmentNextListener,
-        LearningAndTrainingFragment.OnLearningAndTrainingFragmentNextListener,
-        ListeningFragment.OnListeningFragmentNextListener,
-        WritingFragment.OnWritingFragmentNextListener,
-        SpeechToTextFragment.OnSpeechFragmentNextListener,
-        SpeechToTextFragment.OnSpeechFragmentVoiceListener {
+import static com.example.recyclerview.activity.WordListActivity.TOPIC;
 
-    private TextView tvTopicWordName;
-    private TextView tvMean;
-    private ImageView imgImage;
+public class LearningAndPracticeActivity extends AppCompatActivity {
+
+    public static final int WORDS_PER_LEARNING_SECTION = 4;
+    private Menu menu;
+    private LearningAndWord currentLearningAndWord;
+    private WordDAO wordDAO;
+
+    static enum LearningType {
+        LEARNING,
+        LISTENING,
+        WRITING,
+        SPEAKING
+    }
+
+    private ArrayList<LearningType> learningTypes = new ArrayList<>(Arrays.asList(
+            LearningType.LEARNING,
+            LearningType.LISTENING,
+            LearningType.WRITING,
+            LearningType.SPEAKING
+    ));
+
+    static class LearningAndWord {
+        Word word;
+        LearningType learningType;
+
+        public LearningAndWord(LearningType learningType, Word word) {
+            this.learningType = learningType;
+            this.word = word;
+        }
+    }
+
+    static void shuffleArray(ArrayList<LearningAndWord> ar)
+    {
+        Random rnd = ThreadLocalRandom.current();
+        for (int i = ar.size() - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            LearningAndWord a = ar.get(index);
+            ar.set(index, ar.get(i));
+            ar.set(i, a);
+        }
+    }
+
+    ArrayList<LearningAndWord> learningAndWords;
+    int learningAndWordsIndex = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_and_practice);
-        tvTopicWordName = findViewById(R.id.tv_topic_word_name);
-        imgImage = findViewById(R.id.img_image);
-        tvMean = findViewById(R.id.tv_mean);
 
-        nextFragment(new LearningFragment(this), R.id.learning_and_practiceFragmentLayout);
+        initializeActionBar();
 
+        // Select 3 words and learning that words
+        String topicName = getIntent().getStringExtra(TOPIC);
+        DatabaseHelper helper = new DatabaseHelper(this);
+        wordDAO = new WordDAO(helper);
+        ArrayList<Word> words = wordDAO.getWordsByCategory(
+                topicName,
+                WordDAO.LEARN_TIMES,
+                true,
+                WORDS_PER_LEARNING_SECTION);
+
+        learningAndWords = new ArrayList<>();
+        for (Word word : words) {
+            for (LearningType learningType : learningTypes) {
+                learningAndWords.add(new LearningAndWord(
+                        learningType,
+                        word
+                ));
+            }
+        }
+        shuffleArray(learningAndWords);
+        nextFragment();
+    }
+
+    private void nextFragment() {
+        Fragment fragment = getFragmentByLearningTypeAndWord();
+        if (fragment == null) {
+            return;
+        }
+        nextFragment(fragment, R.id.learning_and_practiceFragmentLayout);
+        updateProgress();
+    }
+
+    private Fragment getFragmentByLearningTypeAndWord() {
+        if (learningAndWordsIndex >= learningAndWords.size()) {
+            finish();
+            return null;
+        }
+
+        currentLearningAndWord = learningAndWords.get(learningAndWordsIndex);
+        switch (currentLearningAndWord.learningType) {
+            case WRITING:
+                return createWritingFragment(currentLearningAndWord.word);
+            case LEARNING:
+                return createLearningFragment(currentLearningAndWord.word);
+            case SPEAKING:
+                return createSpeechToTextFragment(currentLearningAndWord.word);
+            case LISTENING:
+                return createListeningFragment(currentLearningAndWord.word);
+        }
+        return null;
+    }
+
+    private void initializeActionBar() {
         getSupportActionBar().setTitle(null);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black);
-
-        //   getWordInIntent();
     }
 
     public void nextFragment(androidx.fragment.app.Fragment fragment, int id) {
@@ -67,65 +151,91 @@ public class LearningAndPracticeActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.learning, menu);
+        this.menu = menu;
+        updateProgress();
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void updateProgress() {
+        if (menu == null) {
+            return;
+        }
+        MenuItem menuItem = menu.findItem(R.id.progress_text);
+        menuItem.setTitle(learningAndWordsIndex + "/" + learningAndWords.size());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Toast.makeText(
-                    getApplicationContext(), "Clicked on ActionBar",
-                    Toast.LENGTH_SHORT).show();
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void OnLearningFragmentNext() {
-        nextFragment(new ListeningFragment(this), R.id.learning_and_practiceFragmentLayout);
+    //////////////////////////////////////////////////////////////////
+
+    private ListeningFragment createListeningFragment(Word word) {
+        return new ListeningFragment(
+                word,
+                new ListeningFragment.OnListeningFragmentNextListener() {
+                    @Override
+                    public void OnListeningFragmentNext() {
+                        updateLearningTimes();
+                        learningAndWordsIndex++;
+                        nextFragment();
+                    }
+                });
     }
 
-    @Override
-    public void OnLearningAndTrainingFragmentNext() {
-        //    nextFragment(new LearningFragment(this), R.id.learning_and_practiceFragmentLayout);
+    private void updateLearningTimes() {
+        Word word = currentLearningAndWord.word;
+        word.setLearnTimes(word.getLearnTimes() + 1);
+        wordDAO.updateWord(word);
     }
 
-    @Override
-    public void OnListeningFragmentNext() {
-        nextFragment(new WritingFragment(this), R.id.learning_and_practiceFragmentLayout);
+    private WritingFragment createWritingFragment(Word word) {
+        return new WritingFragment(
+                word,
+                new WritingFragment.OnWritingFragmentNextListener() {
+                    @Override
+                    public void OnWritingFragmentNext() {
+                        updateLearningTimes();
+                        learningAndWordsIndex++;
+                        nextFragment();
+                    }
+                });
     }
 
-    @Override
-    public void OnWritingFragmentNext() {
-        nextFragment(new SpeechToTextFragment(this, this), R.id.learning_and_practiceFragmentLayout);
+    private SpeechToTextFragment createSpeechToTextFragment(Word word) {
+        return new SpeechToTextFragment(
+                word,
+                new SpeechToTextFragment.OnSpeechFragmentVoiceListener() {
+                    @Override
+                    public void OnSpeechFragmentVoice() {
+                    }
+                },
+                new SpeechToTextFragment.OnSpeechFragmentNextListener() {
+                    @Override
+                    public void OnSpeechFragmentNext() {
+                        updateLearningTimes();
+                        learningAndWordsIndex++;
+                        nextFragment();
+
+                    }
+                }
+        );
     }
 
-    @Override
-    public void OnSpeechFragmentNext() {
-        // nextFragment(new SummaryFragment(), R.id.learning_and_practiceFragmentLayout);
+    private LearningFragment createLearningFragment(Word word) {
+        return new LearningFragment(
+                word,
+                new LearningFragment.OnLearningFragmentNextListener() {
+                    @Override
+                    public void OnLearningFragmentNext() {
+                        updateLearningTimes();
+                        learningAndWordsIndex++;
+                        nextFragment();
+                    }
+                });
     }
-
-    @Override
-    public void OnSpeechFragmentVoice() {
-
-    }
-
-    public interface OnClickItemHomeListener {
-        void onClickItemHome();
-    }
-//    private void getWordInIntent() {
-//        Intent intent = getIntent();
-//        int wordId = intent.getIntExtra(WordListActivity.WORD_ID, -1);
-//        if (wordId == -1) {
-//              Toast.makeText(this, "Wrong word id", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        DatabaseHelper helper = new DatabaseHelper(this);
-//        WordDAO wordDAO = new WordDAO(helper);
-//        Word word = wordDAO.getWordById(wordId);
-//        tvMean.setText(word.getMeaning());
-//        tvTopicWordName.setText(word.getValue());
-//        //  imgImage.setImageResource(word.get());
-//    }
 }

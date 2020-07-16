@@ -35,6 +35,9 @@ public class ChooseAnswerFragment extends Fragment {
     private Thread t;
     private boolean okForExit;
 
+    public void SetOkForExit(boolean value) {
+        okForExit = value;
+    }
 
     public ChooseAnswerFragment(
             Activity activity,
@@ -122,7 +125,7 @@ public class ChooseAnswerFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                if (progressBar.getProgress() == 100) {
+                if (!okForExit && progressBar.getProgress() == 100) {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

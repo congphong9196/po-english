@@ -51,6 +51,7 @@ public class TopicWordAdapter extends Adapter<TopicWordAdapter.TopicWordView> {
     @Override
     public void onBindViewHolder(@NonNull TopicWordView holder, int position) {
         final Word word = words.get(position);
+        holder.wordLearningTimes.setText(String.valueOf(word.getLearnTimes()));
         holder.wordValue.setText(word.getValue() + " (" + word.getCorrectAnswerTimes() + ")");
         holder.wordMeaning.setText(word.getMeaning());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -69,11 +70,13 @@ public class TopicWordAdapter extends Adapter<TopicWordAdapter.TopicWordView> {
 
         private final TextView wordValue;
         private final TextView wordMeaning;
+        private final TextView wordLearningTimes;
 
         public TopicWordView(@NonNull View itemView) {
             super(itemView);
             wordValue = itemView.findViewById(R.id.txtWordValue);
             wordMeaning = itemView.findViewById(R.id.txtWordMeaning);
+            wordLearningTimes = itemView.findViewById(R.id.tv_learning_times);
         }
     }
 }

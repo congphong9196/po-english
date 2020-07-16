@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/progress_text"
         app:showAsAction="always|withText"
         android:title="120">
     </item>

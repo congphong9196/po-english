@@ -31,13 +31,10 @@ public class FastLearningActivity
         extends AppCompatActivity
         implements
         ChooseAnswerFragment.OnChooseAnswerFragmentNextListener,
-        SummaryFragment.OnSummaryFragmentNextListener,
-        ListeningFragment.OnListeningFragmentNextListener,
-        WritingFragment.OnWritingFragmentNextListener,
-        SpeechToTextFragment.OnSpeechFragmentVoiceListener,
-        SpeechToTextFragment.OnSpeechFragmentNextListener {
+        SummaryFragment.OnSummaryFragmentNextListener {
 
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
+    ChooseAnswerFragment answerFragment;
     private String topicName;
     ArrayList<Word> words;
     ArrayList<Word> learningWords;
@@ -56,6 +53,8 @@ public class FastLearningActivity
         setContentView(R.layout.activity_training);
         settingUpActionBar();
 
+        answerFragment = null;
+
         topicName = getIntent().getStringExtra(WordListActivity.TOPIC);
         databaseHelper = new DatabaseHelper(this);
         wordDAO = new WordDAO(databaseHelper);
@@ -64,7 +63,7 @@ public class FastLearningActivity
         nextFragment(createChooseAnswerFragment(), R.id.trainingFragmentLayout);
     }
 
-    class WordCorrectionTimeComparator implements Comparator<Word> {
+    public static class WordCorrectionTimeComparator implements Comparator<Word> {
         public int compare(Word s1, Word s2) {
             if (s1.getCorrectAnswerTimes() < ConstSaveData.NUMBER_CORRECT_TIME_TO_BE_LEARNED &&
                 s2.getCorrectAnswerTimes() < ConstSaveData.NUMBER_CORRECT_TIME_TO_BE_LEARNED) {
@@ -96,7 +95,12 @@ public class FastLearningActivity
         if (words.size() < 4) {
             return null;
         }
-        return new ChooseAnswerFragment(this, this, learningWords.get(currentLearningWord), words);
+        answerFragment = new ChooseAnswerFragment(
+                this,
+                this,
+                learningWords.get(currentLearningWord),
+                words);
+        return answerFragment;
     }
 
     private void settingUpActionBar() {
@@ -116,6 +120,12 @@ public class FastLearningActivity
         transaction.replace(id, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        answerFragment.SetOkForExit(true);
     }
 
     private SummaryFragment createSummaryFragment() {
@@ -183,21 +193,6 @@ public class FastLearningActivity
     }
 
     @Override
-    public void OnListeningFragmentNext() {
-        nextFragment(new WritingFragment(this), R.id.trainingFragmentLayout);
-    }
-
-    @Override
-    public void OnWritingFragmentNext() {
-        nextFragment(new SpeechToTextFragment(this, this), R.id.trainingFragmentLayout);
-    }
-
-    @Override
-    public void OnSpeechFragmentVoice() {
-        speak();
-    }
-    //  receive voice input and handle it
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         TextView tvPress;
@@ -216,29 +211,4 @@ public class FastLearningActivity
             }
         }
     }
-    @Override
-    public void OnSpeechFragmentNext() {
-        nextFragment(createSummaryFragment(), R.id.trainingFragmentLayout);
-    }
-
-    private void speak() {
-        //intent to show speech to text dialog
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        //  intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi speech something");
-        startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
-
-        //start intent
-        try {
-            // in there was no error, show dialog
-            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
-        }
-        catch (Exception e) {
-            //if there was some error. get message of error and show
-            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
 }

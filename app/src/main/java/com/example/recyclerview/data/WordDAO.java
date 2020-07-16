@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,12 @@ public class WordDAO {
     public static final String TABLE_NAME = "words";
     public static final String ID = "id";
     public static final String CATEGORY = "category";
+    public static final String CORRECT_ANSWER_TIMES = "correctAnswerTimes";
     public static final String VALUE = "value";
     public static final String MEANING = "meaning";
     public static final String EXAMPLE = "example";
+    public static final String IMAGE = "image";
     public static final String LEARN_TIMES = "learnTimes";
-    public static final String CORRECT_ANSWER_TIMES = "correctAnswerTimes";
     private final DatabaseHelper databaseHelper;
 
     public static WordDAO fromContext(Context context) {
@@ -43,11 +45,19 @@ public class WordDAO {
     }
 
     public ArrayList<Word> getWordsByCategory(String wordCategory) {
-        return getWordsByCategory(wordCategory, "", false);
+        return getWordsByCategory(wordCategory, "", false, -1);
     }
+
     public ArrayList<Word> getWordsByCategory(String wordCategory,
                                               String orderColumn,
                                               boolean isOrderAscending) {
+        return getWordsByCategory(wordCategory, orderColumn, isOrderAscending, -1);
+    }
+
+    public ArrayList<Word> getWordsByCategory(String wordCategory,
+                                              String orderColumn,
+                                              boolean isOrderAscending,
+                                              int limit) {
         ArrayList<Word> words = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + WordDAO.TABLE_NAME
@@ -56,8 +66,12 @@ public class WordDAO {
         if (!orderColumn.isEmpty()) {
             selectQuery += " ORDER BY " + orderColumn + " " + (isOrderAscending ? "ASC" : "DESC");
         }
+        if (limit > 0) {
+            selectQuery += " LIMIT " + limit;
+        }
 
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        Log.d(WordDAO.class.toString(), "QUERY: " + selectQuery);
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {

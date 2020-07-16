@@ -3,15 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/img_flower"
-        android:layout_width="49dp"
-        android:layout_height="56dp"
-        android:layout_alignBottom="@id/tv_word"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/icon_hoa" />
-
     <TextView
         android:id="@+id/tv_vietnamese"
         android:layout_width="wrap_content"
@@ -23,7 +14,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/tv_word"
+        android:id="@+id/tv_mean"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_vietnamese"
@@ -37,7 +28,7 @@
         android:id="@+id/edt_writing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_word"
+        android:layout_below="@id/tv_mean"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#F4DE7C"

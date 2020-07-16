@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.recyclerview.R;
+import com.example.recyclerview.data.Word;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,8 +17,10 @@ import androidx.fragment.app.Fragment;
 
 public class ListeningFragment extends Fragment {
     public final OnListeningFragmentNextListener listener;
+    private final Word word;
 
-    public ListeningFragment(OnListeningFragmentNextListener listener) {
+    public ListeningFragment(Word word, OnListeningFragmentNextListener listener) {
+        this.word = word;
         this.listener = listener;
     }
 
@@ -24,6 +28,13 @@ public class ListeningFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_listening, container, false);
+
+        TextView tvValue = v.findViewById(R.id.tv_value);
+        TextView tvMean = v.findViewById(R.id.tv_mean);
+
+        tvValue.setText(word.getValue());
+        tvMean.setText(word.getMeaning());
+
         Button button = v.findViewById(R.id.btnNext);
         ImageView imageView = v.findViewById(R.id.img_listening);
         imageView.setOnClickListener(new View.OnClickListener() {

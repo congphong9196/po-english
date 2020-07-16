@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.recyclerview.R;
+import com.example.recyclerview.data.Word;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,8 +18,10 @@ import androidx.fragment.app.Fragment;
 public class SpeechToTextFragment extends Fragment {
     public final OnSpeechFragmentVoiceListener listenerVoice;
     public final OnSpeechFragmentNextListener listenerNext;
+    private final Word word;
 
-    public SpeechToTextFragment(OnSpeechFragmentVoiceListener listenerVoice, OnSpeechFragmentNextListener listenerNext) {
+    public SpeechToTextFragment(Word word, OnSpeechFragmentVoiceListener listenerVoice, OnSpeechFragmentNextListener listenerNext) {
+        this.word = word;
         this.listenerVoice = listenerVoice;
         this.listenerNext = listenerNext;
     }
@@ -27,10 +30,11 @@ public class SpeechToTextFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_speechtotext, container, false);
-
         TextView tvWord = v.findViewById(R.id.tv_word);
         TextView tvSpelling = v.findViewById(R.id.tv_spelling);
         TextView tvPress = v.findViewById(R.id.tv_press);
+        tvWord.setText(word.getValue());
+
         ImageButton imageButtonMic = v.findViewById(R.id.img_btnMic);
         imageButtonMic.setOnClickListener(new View.OnClickListener() {
             @Override

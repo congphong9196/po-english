@@ -22,12 +22,14 @@ import androidx.fragment.app.Fragment;
 
 public class LearningFragment extends Fragment {
     private final OnLearningFragmentNextListener listener;
+    private Word word;
     private TextView tvTopicWordName;
     private ImageView imgImage;
     private TextView tvMean;
 
 
-    public LearningFragment(OnLearningFragmentNextListener listener) {
+    public LearningFragment(Word word, OnLearningFragmentNextListener listener) {
+        this.word = word;
         this.listener = listener;
     }
 
@@ -39,42 +41,20 @@ public class LearningFragment extends Fragment {
         tvTopicWordName = v.findViewById(R.id.tv_topic_word_name);
         imgImage = v.findViewById(R.id.img_image);
         tvMean = v.findViewById(R.id.tv_mean);
-        Button button = v.findViewById(R.id.btnNext);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        tvTopicWordName.setText(word.getValue());
+        tvMean.setText(word.getMeaning());
+
+        Button btnNext = v.findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.OnLearningFragmentNext();
             }
         });
-
-//        getWordInIntent();
         return v;
-
-
     }
-
-//    @Override
-//    public void onClickItemHome() {
-//        Intent intent = new Intent(getActivity().getApplication(), TopicWordListActivity.class);
-//    }
-
     public interface OnLearningFragmentNextListener {
         void OnLearningFragmentNext();
     }
-//    public void getWordInIntent() {
-//        Intent intent = getIntent();
-//        int wordId = intent.getIntExtra(WordListActivity.WORD_ID, -1);
-//        if (wordId == -1) {
-//            Toast.makeText(getContext(), "Wrong word id", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        DatabaseHelper helper = new DatabaseHelper(getContext());
-//        WordDAO wordDAO = new WordDAO(helper);
-//        Word word = wordDAO.getWordById(wordId);
-//        tvMean.setText(word.getMeaning());
-//        tvTopicWordName.setText(word.getValue());
-//      //  imgImage.setImageResource(word.get());
-//    }
-
-
 }

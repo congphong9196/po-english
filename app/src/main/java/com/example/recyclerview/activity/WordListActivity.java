@@ -165,7 +165,7 @@ public class WordListActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FAST_LEARNING_ACTIVITY) {
+        if (requestCode == FAST_LEARNING_ACTIVITY || requestCode == LEARNING_AND_PRACTICE_ACTIVITY) {
             InitializeData();
         }
     }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.recyclerview.notification.NotificationReceiver;
 import com.example.recyclerview.R;
@@ -20,7 +21,7 @@ import java.util.Calendar;
 
 public class RemindActivity extends AppCompatActivity {
 
-    class RemindTime {
+    static class RemindTime {
         private int hour;
         private int minute;
 
@@ -29,19 +30,19 @@ public class RemindActivity extends AppCompatActivity {
             this.minute = minute;
         }
 
-        public int getHour() {
+        int getHour() {
             return hour;
         }
 
-        public void setHour(int hour) {
+        void setHour(int hour) {
             this.hour = hour;
         }
 
-        public int getMinute() {
+        int getMinute() {
             return minute;
         }
 
-        public void setMinute(int minute) {
+        void setMinute(int minute) {
             this.minute = minute;
         }
     }
@@ -118,6 +119,7 @@ public class RemindActivity extends AppCompatActivity {
 
     private void createAlarmForLearning(NumberPicker txtHours, NumberPicker txtMinute) {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, txtHours.getValue());
         calendar.set(Calendar.MINUTE, txtMinute.getValue());
 
@@ -137,6 +139,10 @@ public class RemindActivity extends AppCompatActivity {
                     pendingIntent
             );
         }
+        Toast.makeText(
+                this,
+                "Alarm are set to " + txtHours.getValue() + ":" + txtMinute.getValue() + " everyday",
+                Toast.LENGTH_LONG).show();
     }
 
     private void goBackActivity() {
