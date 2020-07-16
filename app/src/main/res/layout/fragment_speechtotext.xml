@@ -15,21 +15,11 @@
         android:textColor="#000"/>
 
     <TextView
-        android:id="@+id/tv_spelling"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_word"
-        android:text="[kæt]"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textColor="#000"/>
-
-    <TextView
         android:id="@+id/tv_press"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Press mic button to input voice..."
-        android:layout_below="@id/tv_spelling"
+        android:layout_below="@id/tv_word"
         android:gravity="center"
         android:layout_marginTop="20dp"
         android:textSize="20sp"
