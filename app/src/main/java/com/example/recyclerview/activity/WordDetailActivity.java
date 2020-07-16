@@ -31,6 +31,9 @@ public class WordDetailActivity extends AppCompatActivity {
     private TextView tvTopicWordName;
     private TextView tvExample;
     private TextView tvMean;
+    private DatabaseHelper helper = new DatabaseHelper(this);
+    private int wordId;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,9 +56,10 @@ public class WordDetailActivity extends AppCompatActivity {
         });
 
         handleSpeakerClicked();
-        handleButtonNextClicked();
         settingActionBar();
         getWordInIntent();
+        handleButtonNextClicked();
+
     }
 
     private void handleButtonNextClicked() {
@@ -63,7 +67,12 @@ public class WordDetailActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(WordDetailActivity.this, "Click to NEXT", Toast.LENGTH_SHORT).show();
+                wordId += 1;
+                WordDAO wordDAO = new WordDAO(helper);
+                Word word = wordDAO.getWordById(wordId);
+                tvMean.setText(word.getMeaning());
+                tvTopicWordName.setText(word.getValue());
+                tvExample.setText(word.getExample());
             }
         });
     }
@@ -80,12 +89,11 @@ public class WordDetailActivity extends AppCompatActivity {
 
     private void getWordInIntent() {
         Intent intent = getIntent();
-        int wordId = intent.getIntExtra(WordListActivity.WORD_ID, -1);
+        wordId = intent.getIntExtra(WordListActivity.WORD_ID, -1);
         if (wordId == -1) {
             Toast.makeText(this, "Wrong word id", Toast.LENGTH_SHORT).show();
             return;
         }
-        DatabaseHelper helper = new DatabaseHelper(this);
         WordDAO wordDAO = new WordDAO(helper);
         Word word = wordDAO.getWordById(wordId);
         tvMean.setText(word.getMeaning());
@@ -147,7 +155,7 @@ public class WordDetailActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void ttsGreater21(String text) {
-        String utteranceId=this.hashCode() + "";
+        String utteranceId = this.hashCode() + "";
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 

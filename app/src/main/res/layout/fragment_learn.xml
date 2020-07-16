@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_topic_word_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/wife"
+            android:id="@+id/img_image"
             android:layout_width="201dp"
             android:layout_height="155dp"
             android:layout_gravity="center"
@@ -61,17 +61,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Describe"
+            android:text="Vietnamese"
             android:textColor="#706F6F"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="239dp" />
 
         <TextView
+            android:id="@+id/tv_mean"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Mèo là thú cưng dễ thương và đáng yêu"
+            android:text="Con mèo"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

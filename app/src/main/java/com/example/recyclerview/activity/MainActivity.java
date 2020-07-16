@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.speech.RecognizerIntent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.recyclerview.R;
 import com.example.recyclerview.adapter.OnItemClickListener;
@@ -17,12 +15,9 @@ import com.example.recyclerview.data.Course;
 import com.example.recyclerview.data.DatabaseInitializer;
 import com.example.recyclerview.fragment.CourseFragment;
 
-import java.util.ArrayList;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener {
     public static final String COURSE_DATA = "COURSE_DATA";
