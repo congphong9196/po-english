@@ -18,7 +18,8 @@ public class WordDAO {
     public static final String VALUE = "value";
     public static final String MEANING = "meaning";
     public static final String EXAMPLE = "example";
-    public static final String IMAGE = "image";
+    public static final String TYPE = "type";
+    public static final String SPELLING = "spelling";
     public static final String LEARN_TIMES = "learnTimes";
     private final DatabaseHelper databaseHelper;
 
@@ -82,8 +83,10 @@ public class WordDAO {
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getString(4),
-                        cursor.getInt(5),
-                        cursor.getInt(6)
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getInt(7),
+                        cursor.getInt(8)
                 ));
             } while (cursor.moveToNext());
         }
@@ -129,8 +132,10 @@ public class WordDAO {
                     cursor.getString(2),
                     cursor.getString(3),
                     cursor.getString(4),
-                    cursor.getInt(5),
-                    cursor.getInt(6)
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getInt(7),
+                    cursor.getInt(8)
             );
         }
 
@@ -149,9 +154,11 @@ public class WordDAO {
         ContentValues values = new ContentValues();
         values.put(WordDAO.ID, word.getId());
         values.put(WordDAO.CATEGORY, word.getWordCategory());
-        values.put(WordDAO.EXAMPLE, word.getExample());
         values.put(WordDAO.VALUE, word.getValue());
         values.put(WordDAO.MEANING, word.getMeaning());
+        values.put(WordDAO.EXAMPLE, word.getExample());
+        values.put(WordDAO.TYPE, word.getType());
+        values.put(WordDAO.SPELLING, word.getSpelling());
         values.put(WordDAO.LEARN_TIMES, word.getLearnTimes());
         values.put(WordDAO.CORRECT_ANSWER_TIMES, word.getCorrectAnswerTimes());
         return values;

@@ -1,8 +1,11 @@
 package com.example.recyclerview.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.recyclerview.data.DatabaseHelper;
@@ -29,9 +32,13 @@ import static com.example.recyclerview.activity.WordListActivity.TOPIC;
 public class LearningAndPracticeActivity extends AppCompatActivity {
 
     public static final int WORDS_PER_LEARNING_SECTION = 4;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1;
     private Menu menu;
     private LearningAndWord currentLearningAndWord;
     private WordDAO wordDAO;
+
+
+
 
     static enum LearningType {
         LEARNING,
@@ -57,11 +64,9 @@ public class LearningAndPracticeActivity extends AppCompatActivity {
         }
     }
 
-    static void shuffleArray(ArrayList<LearningAndWord> ar)
-    {
+    static void shuffleArray(ArrayList<LearningAndWord> ar) {
         Random rnd = ThreadLocalRandom.current();
-        for (int i = ar.size() - 1; i > 0; i--)
-        {
+        for (int i = ar.size() - 1; i > 0; i--) {
             int index = rnd.nextInt(i + 1);
             // Simple swap
             LearningAndWord a = ar.get(index);
@@ -80,7 +85,7 @@ public class LearningAndPracticeActivity extends AppCompatActivity {
 
         initializeActionBar();
 
-        // Select 3 words and learning that words
+        // Select 4 words and learning that words
         String topicName = getIntent().getStringExtra(TOPIC);
         DatabaseHelper helper = new DatabaseHelper(this);
         wordDAO = new WordDAO(helper);
@@ -174,6 +179,19 @@ public class LearningAndPracticeActivity extends AppCompatActivity {
 
     //////////////////////////////////////////////////////////////////
 
+    private LearningFragment createLearningFragment(Word word) {
+        return new LearningFragment(
+                word,
+                new LearningFragment.OnLearningFragmentNextListener() {
+                    @Override
+                    public void OnLearningFragmentNext() {
+                        updateLearningTimes();
+                        learningAndWordsIndex++;
+                        nextFragment();
+                    }
+                });
+    }
+
     private ListeningFragment createListeningFragment(Word word) {
         return new ListeningFragment(
                 word,
@@ -192,6 +210,11 @@ public class LearningAndPracticeActivity extends AppCompatActivity {
         word.setLearnTimes(word.getLearnTimes() + 1);
         wordDAO.updateWord(word);
     }
+    private void updateCorrectAnswerTimes() {
+        Word word = currentLearningAndWord.word;
+        word.setCorrectAnswerTimes(word.getCorrectAnswerTimes() + 1);
+        wordDAO.updateWord(word);
+    }
 
     private WritingFragment createWritingFragment(Word word) {
         return new WritingFragment(
@@ -200,6 +223,7 @@ public class LearningAndPracticeActivity extends AppCompatActivity {
                     @Override
                     public void OnWritingFragmentNext() {
                         updateLearningTimes();
+                        updateCorrectAnswerTimes();
                         learningAndWordsIndex++;
                         nextFragment();
                     }
@@ -212,12 +236,14 @@ public class LearningAndPracticeActivity extends AppCompatActivity {
                 new SpeechToTextFragment.OnSpeechFragmentVoiceListener() {
                     @Override
                     public void OnSpeechFragmentVoice() {
+                        speak();
                     }
                 },
                 new SpeechToTextFragment.OnSpeechFragmentNextListener() {
                     @Override
                     public void OnSpeechFragmentNext() {
                         updateLearningTimes();
+                        updateCorrectAnswerTimes();
                         learningAndWordsIndex++;
                         nextFragment();
 
@@ -226,16 +252,45 @@ public class LearningAndPracticeActivity extends AppCompatActivity {
         );
     }
 
-    private LearningFragment createLearningFragment(Word word) {
-        return new LearningFragment(
-                word,
-                new LearningFragment.OnLearningFragmentNextListener() {
-                    @Override
-                    public void OnLearningFragmentNext() {
-                        updateLearningTimes();
-                        learningAndWordsIndex++;
-                        nextFragment();
+    private void speak() {
+        //intent to show speech to text dialog
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        //  intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi speech something");
+        startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+
+        //start intent
+        try {
+            // in there was no error, show dialog
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        } catch (Exception e) {
+            //if there was some error. get message of error and show
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        TextView tvPress,tvValue;
+        tvPress = findViewById(R.id.tv_press);
+        tvValue = findViewById(R.id.tv_word);
+        switch (requestCode) {
+            case REQUEST_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    // get text array from voice intent
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    // set to text view
+                    tvPress.setText(result.get(0));
+                    if (tvPress.getText().toString().toLowerCase().equals(tvValue.getText().toString().toLowerCase())){
+                        Toast.makeText(getApplicationContext(),"Wow, You speak like a native!",Toast.LENGTH_SHORT).show();
                     }
-                });
+                    else {
+                        Toast.makeText(getApplicationContext(),"Sorry, You need to practice more!",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            }
+        }
     }
 }

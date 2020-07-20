@@ -74,7 +74,8 @@
             android:id="@+id/actionTraining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Learning and practice" />
+            android:text="Learning And Practice" />
+
 
         <Button
             android:id="@+id/actionFastLearning"

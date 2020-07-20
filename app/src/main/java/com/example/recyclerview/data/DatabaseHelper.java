@@ -96,6 +96,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WordDAO.VALUE + " TEXT,"
                 + WordDAO.MEANING + " TEXT,"
                 + WordDAO.EXAMPLE + " TEXT,"
+                + WordDAO.TYPE + " TEXT,"
+                + WordDAO.SPELLING + " TEXT,"
                 + WordDAO.LEARN_TIMES + " TEXT,"
                 + WordDAO.CORRECT_ANSWER_TIMES + " TEXT" +
                 ")";

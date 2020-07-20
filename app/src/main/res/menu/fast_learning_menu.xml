@@ -19,7 +19,7 @@
     </item>
     <item
         app:showAsAction="always|withText"
-        android:title="120">
+        android:title="">
     </item>
 
 </menu>

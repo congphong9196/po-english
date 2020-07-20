@@ -12,7 +12,6 @@ public class DatabaseInitializer implements DataInitializable{
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         boolean isDatabaseInitialized = sp.getBoolean(DATABASE_INITIALIZED_KEY, false);
-        isDatabaseInitialized = false;
 
         if (!isDatabaseInitialized) {
             DatabaseHelper db = new DatabaseHelper(context);

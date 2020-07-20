@@ -15,24 +15,38 @@
         android:padding="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"/>
+
     <TextView
-        android:id="@+id/tv_mean"
+        android:id="@+id/tv_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="(n) Con mèo"
+        android:text="noun"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:padding="5dp"
+        android:layout_toEndOf="@id/tv_topic_word_name"
+        android:layout_alignBaseline="@id/tv_topic_word_name" />
+
+    <TextView
+        android:id="@+id/tv_spelling"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/kæt/"
         android:textSize="16sp"
         android:padding="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:layout_below="@id/tv_topic_word_name"/>
-
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@id/tv_mean"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/icon_hoa"/>
+    <TextView
+        android:id="@+id/tv_mean"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Con mèo"
+        android:textSize="16sp"
+        android:padding="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/tv_spelling"/>
 
     <ImageButton
         android:id="@+id/image_btnSpeaker"

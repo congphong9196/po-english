@@ -7,6 +7,8 @@ public class Word {
     private String value;
     private String meaning;
     private String example;
+    private String type;
+    private String spelling;
     private int learnTimes;
     private int correctAnswerTimes;
 
@@ -15,18 +17,27 @@ public class Word {
                 String value,
                 String meaning,
                 String example,
+                String type,
+                String spelling,
                 int learnTimes,
                 int correctAnswerTimes) {
         this.id = id;
         this.wordCategory = wordCategory;
         this.value = value;
         this.meaning = meaning;
+        this.type = type;
+        this.spelling = spelling;
         this.example = example;
         this.learnTimes = learnTimes;
         this.correctAnswerTimes = correctAnswerTimes;
     }
 
-    public Word(String wordCategory, String value, String meaning, String example) {
+    public Word(String wordCategory,
+                String value,
+                String meaning,
+                String example,
+                String type,
+                String spelling) {
         this.learnTimes = 0;
         this.correctAnswerTimes = 0;
         this.id = idCount++;
@@ -34,9 +45,13 @@ public class Word {
         this.value = value;
         this.meaning = meaning;
         this.example = example;
+        this.type = type;
+        this.spelling = spelling;
     }
 
-    public Word(String wordCategory, String value, String meaning) {
+    public Word(String wordCategory,
+                String value,
+                String meaning) {
         this.learnTimes = 0;
         this.correctAnswerTimes = 0;
         this.id = idCount++;
@@ -44,6 +59,24 @@ public class Word {
         this.value = value;
         this.meaning = meaning;
         this.example = "";
+        this.type = "";
+        this.spelling = "";
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSpelling() {
+        return spelling;
+    }
+
+    public void setSpelling(String spelling) {
+        this.spelling = spelling;
     }
 
     public String getValue() {

@@ -17,6 +17,7 @@ import com.example.recyclerview.R;
 import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
 import com.example.recyclerview.data.WordDAO;
+import com.example.recyclerview.utils.TextToSpeechUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,8 @@ public class WordDetailActivity extends AppCompatActivity {
     private TextView tvTopicWordName;
     private TextView tvExample;
     private TextView tvMean;
+    private TextView tvType;
+    private TextView tvSpelling;
     private DatabaseHelper helper = new DatabaseHelper(this);
     private int wordId;
     private String topicName;
@@ -49,6 +52,8 @@ public class WordDetailActivity extends AppCompatActivity {
         tvTopicWordName = findViewById(R.id.tv_topic_word_name);
         tvExample = findViewById(R.id.tv_sentence);
         tvMean = findViewById(R.id.tv_mean);
+        tvType = findViewById(R.id.tv_type);
+        tvSpelling = findViewById(R.id.tv_spelling);
 
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -107,6 +112,8 @@ public class WordDetailActivity extends AppCompatActivity {
                 tvMean.setText(word.getMeaning());
                 tvTopicWordName.setText(word.getValue());
                 tvExample.setText(word.getExample());
+                tvType.setText(word.getType());
+                tvSpelling.setText(word.getSpelling());
 
                 updateProgress();
             }
@@ -123,7 +130,8 @@ public class WordDetailActivity extends AppCompatActivity {
         imgButtonSpeaker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak();
+                String text = tvTopicWordName.getText().toString().trim();
+                TextToSpeechUtils.speak(text,getApplicationContext(),textToSpeech);
             }
         });
     }
@@ -140,6 +148,8 @@ public class WordDetailActivity extends AppCompatActivity {
         tvMean.setText(word.getMeaning());
         tvTopicWordName.setText(word.getValue());
         tvExample.setText(word.getExample());
+        tvType.setText(word.getType());
+        tvSpelling.setText(word.getSpelling());
         return word;
     }
 
@@ -168,15 +178,7 @@ public class WordDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void speak() {
-        String text = tvTopicWordName.getText().toString().trim();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ttsGreater21(text);
-        } else {
-            ttsUnder20(text);
-        }
-    }
 
     @Override
     protected void onPause() {
@@ -187,18 +189,6 @@ public class WordDetailActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    @SuppressWarnings("deprecation")
-    private void ttsUnder20(String text) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, map);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void ttsGreater21(String text) {
-        String utteranceId = this.hashCode() + "";
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
-    }
 
     public void nextFragment(androidx.fragment.app.Fragment fragment, int id) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

@@ -14,10 +14,7 @@ import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
 import com.example.recyclerview.data.WordDAO;
 import com.example.recyclerview.fragment.ChooseAnswerFragment;
-import com.example.recyclerview.fragment.ListeningFragment;
-import com.example.recyclerview.fragment.SpeechToTextFragment;
 import com.example.recyclerview.fragment.SummaryFragment;
-import com.example.recyclerview.fragment.WritingFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;

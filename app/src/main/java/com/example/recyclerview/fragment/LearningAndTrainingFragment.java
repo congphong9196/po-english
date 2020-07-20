@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 public class LearningAndTrainingFragment extends Fragment {
     private final OnLearningAndTrainingFragmentNextListener listener;
 
+
     public LearningAndTrainingFragment(OnLearningAndTrainingFragmentNextListener listener) {
         this.listener = listener;
     }

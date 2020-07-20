@@ -31,7 +31,6 @@ public class SpeechToTextFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_speechtotext, container, false);
         TextView tvWord = v.findViewById(R.id.tv_word);
-        TextView tvSpelling = v.findViewById(R.id.tv_spelling);
         TextView tvPress = v.findViewById(R.id.tv_press);
         tvWord.setText(word.getValue());
 
