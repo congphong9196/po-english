@@ -66,13 +66,11 @@ public class WordInitializer implements DataInitializable {
         initializeSpeaking(words);
         initializeReading(words);
         initializeWriting(words);
-
         initializeContracts(words);
         initializeShopping(words);
         initializeMarketing(words);
         initializeMovies(words);
         initializeAccounting(words);
-
 
         DatabaseHelper db = new DatabaseHelper(context);
         WordDAO wordDAO = new WordDAO(db);
@@ -94,7 +92,7 @@ public class WordInitializer implements DataInitializable {
         words.add(new Word(TopicDAO.ANIMAL, "Rabbit", "Con thỏ", "Rabbits have very long ears", "noun", "/ˈræbɪt/"));
         words.add(new Word(TopicDAO.ANIMAL, "Ostrich", "Con đà điểu", "Ostrich is the fastest bird", "noun", "/ˈɒstrɪtʃ/"));
         words.add(new Word(TopicDAO.ANIMAL, "Elephant", "Con voi", "Elephants have a very large body", "noun", "/ˈelɪfənt/"));
-        words.add(new Word(TopicDAO.ANIMAL, "Bid", "Con chim", "Birds can fly very fast", "noun", "/bɪd/"));
+        words.add(new Word(TopicDAO.ANIMAL, "Bird", "Con chim", "Birds can fly very fast", "noun", "/bɜːd/"));
         words.add(new Word(TopicDAO.ANIMAL, "Turtle", "Con rùa", "Turtles crawl very slowly", "noun", "/ˈtɜːtl/"));
         words.add(new Word(TopicDAO.ANIMAL, "Snake", "Con rắn", "Snakes are animals without legs", "noun", "/sneɪk/"));
         words.add(new Word(TopicDAO.ANIMAL, "Lion", "Con sư tử", "Lion is very good at hunting", "noun", "/ˈlaɪən/"));

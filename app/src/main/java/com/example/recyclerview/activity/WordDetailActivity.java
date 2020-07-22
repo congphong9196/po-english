@@ -61,7 +61,7 @@ public class WordDetailActivity extends AppCompatActivity {
                 if (status != TextToSpeech.ERROR) {
                     textToSpeech.setLanguage(Locale.ENGLISH);
                 } else {
-                    Toast.makeText(WordDetailActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(WordDetailActivity.this, "", Toast.LENGTH_SHORT).show();
                 }
             }
         });

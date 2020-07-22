@@ -53,9 +53,12 @@ public class ListeningFragment extends Fragment {
 
         final TextView tvValue = v.findViewById(R.id.tv_value);
         TextView tvMean = v.findViewById(R.id.tv_mean);
+        TextView tvSpelling = v.findViewById(R.id.tv_spelling);
 
         tvValue.setText(word.getValue());
         tvMean.setText(word.getMeaning());
+        tvSpelling.setText(word.getSpelling());
+
         setTextToSpeech();
         sbSpeed = v.findViewById(R.id.sb_speed);
         Button button = v.findViewById(R.id.btnNext);

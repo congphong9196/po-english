@@ -29,6 +29,17 @@
             android:gravity="center"
             />
         <TextView
+            android:id="@+id/tv_spelling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_value"
+            android:layout_toEndOf="@id/tv_value"
+            android:layout_marginStart="5dp"
+            android:text="spelling"
+            android:textSize="20sp"
+            android:gravity="center"
+            />
+        <TextView
             android:id="@+id/tv_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

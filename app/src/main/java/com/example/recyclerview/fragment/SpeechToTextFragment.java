@@ -32,7 +32,9 @@ public class SpeechToTextFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_speechtotext, container, false);
         TextView tvWord = v.findViewById(R.id.tv_word);
         TextView tvPress = v.findViewById(R.id.tv_press);
+        TextView tvSpelling = v.findViewById(R.id.tv_spelling);
         tvWord.setText(word.getValue());
+        tvSpelling.setText(word.getSpelling());
 
         ImageButton imageButtonMic = v.findViewById(R.id.img_btnMic);
         imageButtonMic.setOnClickListener(new View.OnClickListener() {

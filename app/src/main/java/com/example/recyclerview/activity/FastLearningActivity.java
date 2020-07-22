@@ -62,12 +62,6 @@ public class FastLearningActivity
 
     public static class WordCorrectionTimeComparator implements Comparator<Word> {
         public int compare(Word s1, Word s2) {
-            if (s1.getCorrectAnswerTimes() < ConstSaveData.NUMBER_CORRECT_TIME_TO_BE_LEARNED &&
-                s2.getCorrectAnswerTimes() < ConstSaveData.NUMBER_CORRECT_TIME_TO_BE_LEARNED) {
-                // If that words are not learned, we still want to make question
-                // about that word for learning again
-                return 0;
-            }
             return Integer.compare(s1.getCorrectAnswerTimes(), s2.getCorrectAnswerTimes());
         }
     }
@@ -83,6 +77,8 @@ public class FastLearningActivity
             words.remove(i);
         }
     }
+
+
 
     public ChooseAnswerFragment createChooseAnswerFragment() {
         if (currentLearningWord >= learningWords.size()) {

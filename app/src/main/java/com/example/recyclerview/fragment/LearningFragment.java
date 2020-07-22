@@ -24,8 +24,9 @@ public class LearningFragment extends Fragment {
     private final OnLearningFragmentNextListener listener;
     private Word word;
     private TextView tvTopicWordName;
-    private ImageView imgImage;
     private TextView tvMean;
+    private TextView tvType;
+    private TextView tvSpelling;
 
 
     public LearningFragment(Word word, OnLearningFragmentNextListener listener) {
@@ -39,11 +40,14 @@ public class LearningFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_learn, container, false);
 
         tvTopicWordName = v.findViewById(R.id.tv_topic_word_name);
-        imgImage = v.findViewById(R.id.img_image);
         tvMean = v.findViewById(R.id.tv_mean);
+        tvType = v.findViewById(R.id.tv_type);
+        tvSpelling = v.findViewById(R.id.tv_spelling);
 
         tvTopicWordName.setText(word.getValue());
         tvMean.setText(word.getMeaning());
+        tvType.setText(word.getType());
+        tvSpelling.setText(word.getSpelling());
 
         Button btnNext = v.findViewById(R.id.btnNext);
         btnNext.setOnClickListener(new View.OnClickListener() {
