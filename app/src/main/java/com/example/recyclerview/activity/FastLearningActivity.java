@@ -6,10 +6,12 @@ import android.speech.RecognizerIntent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.recyclerview.R;
-import com.example.recyclerview.data.ConstSaveData;
 import com.example.recyclerview.data.DatabaseHelper;
 import com.example.recyclerview.data.Word;
 import com.example.recyclerview.data.WordDAO;
@@ -19,10 +21,6 @@ import com.example.recyclerview.fragment.SummaryFragment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 public class FastLearningActivity
         extends AppCompatActivity
