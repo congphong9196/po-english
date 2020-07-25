@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.recyclerview.R;
+
 import java.util.ArrayList;
 
 public class CourseDAO {
@@ -49,7 +51,6 @@ public class CourseDAO {
 
     public ContentValues getContentValues(Course course) {
         ContentValues values = new ContentValues();
-        values.put(ID, course.getId());
         values.put(IMAGE, course.getImage());
         values.put(TITLE, course.getTitle());
         return values;
@@ -83,5 +84,19 @@ public class CourseDAO {
             addCourse(course, db);
         }
         db.close();
+    }
+
+    public Course addDefaultCourseIfNotExists(String courseName) {
+        Course existingCourse = getCourseByTitle(courseName);
+        if (existingCourse != null) {
+            return existingCourse;
+        }
+
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Course course = new Course(R.drawable.icon_tienganhcoban, courseName);
+        ContentValues values = getContentValues(course);
+        db.insert(TABLE_NAME, null, values);
+        db.close();
+        return getCourseByTitle(courseName);
     }
 }

@@ -4,21 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".activity.SettingActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_setting_remind"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:listitem="@layout/item_setting"/>
-
-<!--    <Button-->
-<!--        android:id="@+id/setting_remind"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Setting remind"-->
-<!--        android:gravity="center"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent" />-->
 
 </RelativeLayout>

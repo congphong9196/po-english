@@ -1,0 +1,106 @@
+{
+  "courses": [
+    {
+      "name": "Thẻ học thông minh",
+      "numberOfWords": 12012,
+      "numberOfTopics": 123,
+      "topics": [
+        {
+          "name": "Rau củ quả",
+          "words": [
+            {
+              "value": "Celery",
+              "meaning": "Cần Tây"
+            },
+            {
+              "value": "Ginger",
+              "meaning": "Củ Gừng"
+            },
+            {
+              "value": "Chilli",
+              "meaning": "Quả Ớt"
+            },
+            {
+              "value": "Jellyfish",
+              "meaning": "Con sứa"
+            },
+            {
+              "value": "Goby",
+              "meaning": "Cá Bống"
+            },
+            {
+              "value": "Dory",
+              "meaning": "Cá Mè"
+            }
+          ]
+        },
+        {
+          "name": "Hoa",
+          "words": [
+            {
+              "value": "Tuberose",
+              "meaning": "Hoa Huệ"
+            },
+            {
+              "value": "Flamboyant",
+              "meaning": "Hoa Phượng"
+            },
+            {
+              "value": "Gerbera",
+              "meaning": "Hoa Đồng Tiền"
+            },
+            {
+              "value": "Jellyfish",
+              "meaning": "Con sứa"
+            },
+            {
+              "value": "Goby",
+              "meaning": "Cá Bống"
+            },
+            {
+              "value": "Dory",
+              "meaning": "Cá Mè"
+            }
+          ]
+        }
+      ]
+    }
+    ,
+    {
+      "name": "Tiếng anh cho trẻ em",
+      "numberOfWords": 6,
+      "numberOfTopics": 1,
+      "topics": [
+        {
+          "name": "Động vật dưới nước",
+          "words": [
+            {
+              "value": "Jellyfish",
+              "meaning": "Con sứa"
+            },
+            {
+              "value": "Goby",
+              "meaning": "Cá Bống"
+            },
+            {
+              "value": "Dory",
+              "meaning": "Cá Mè"
+            },
+            {
+              "value": "Durian",
+              "meaning": "Quả sầu riêng"
+            },
+            {
+              "value": "Wolf",
+              "meaning": "Con sói"
+            },
+            {
+              "value": "Hyenas",
+              "meaning": "Con Linh Cẩu"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

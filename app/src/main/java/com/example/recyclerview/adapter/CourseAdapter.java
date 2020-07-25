@@ -42,7 +42,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Course course = courses.get(position);
-        Picasso.with(context).load(courses.get(position).getImage()).resize(150, 100).centerInside().into(holder.image);
+        Picasso.get().load(courses.get(position).getImage()).resize(150, 100).centerInside().into(holder.image);
         holder.txtTitle.setText(courses.get(position).getTitle());
         holder.txtTotalWord.setText(String.valueOf(courses.get(position).getNumberOfWords()));
 

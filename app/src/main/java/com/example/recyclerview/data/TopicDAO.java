@@ -82,7 +82,6 @@ public class TopicDAO {
 
     public ContentValues getContentValues(Topic topic) {
         ContentValues values = new ContentValues();
-        values.put(ID, topic.getId());
         values.put(COURSE_ID, topic.getCourseId());
         values.put(NAME, topic.getName());
         return values;
@@ -99,6 +98,18 @@ public class TopicDAO {
             addTopic(topic, db);
         }
         db.close();
+    }
+
+    public Topic addTopicIfNotExists(Topic topic) {
+        Topic topicExisting = getTopicByNameAncCourseId(topic.getName(), topic.getCourseId());
+        if (topicExisting != null) {
+            return topicExisting;
+        }
+
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        addTopic(topic, db);
+        db.close();
+        return getTopicByNameAncCourseId(topic.getName(), topic.getCourseId());
     }
 
     public ArrayList<Topic> getTopicsByCourseId(int courseId) {
@@ -119,5 +130,24 @@ public class TopicDAO {
         }
         cursor.close();
         return topics;
+    }
+
+    public Topic getTopicByNameAncCourseId(String topicName, int courseId) {
+        Topic topic = null;
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " where " + NAME + "='" + topicName + "' AND " + COURSE_ID + "=" + courseId;
+
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            topic = new Topic(
+                    cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getString(2)
+            );
+        }
+
+        cursor.close();
+        return topic;
     }
 }

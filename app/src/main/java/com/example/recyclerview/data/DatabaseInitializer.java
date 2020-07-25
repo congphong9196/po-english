@@ -14,6 +14,7 @@ public class DatabaseInitializer implements DataInitializable{
         boolean isDatabaseInitialized = sp.getBoolean(DATABASE_INITIALIZED_KEY, false);
 
         if (!isDatabaseInitialized) {
+//        if (true) {
             DatabaseHelper db = new DatabaseHelper(context);
             db.dropTables();
             db.createTables();

@@ -99,14 +99,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REMIND_ACTIVITY_REQUEST: {
-                nextFragment(new CourseFragment(this), R.id.fragmentContent);
-                findViewById(R.id.database_loading_progress).setVisibility(View.INVISIBLE);
-                break;
-            }
-        }
+        nextFragment(new CourseFragment(this), R.id.fragmentContent);
+        findViewById(R.id.database_loading_progress).setVisibility(View.INVISIBLE);
     }
 
     @Override

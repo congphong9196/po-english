@@ -70,13 +70,11 @@ public class FastLearningActivity
         words = wordDAO.getWordsByCategory(topicName);
         Collections.sort(words, new WordCorrectionTimeComparator());
         learningWords = new ArrayList<>();
-        for (int i = 9; i >= 0; i--) {
+        for (int i = Math.min(9, words.size() - 1); i >= 0; i--) {
             learningWords.add(words.get(i));
             words.remove(i);
         }
     }
-
-
 
     public ChooseAnswerFragment createChooseAnswerFragment() {
         if (currentLearningWord >= learningWords.size()) {

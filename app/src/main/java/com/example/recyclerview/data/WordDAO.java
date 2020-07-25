@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class WordDAO {
     // Word Table
@@ -152,7 +153,6 @@ public class WordDAO {
 
     public ContentValues getContentValues(Word word) {
         ContentValues values = new ContentValues();
-        values.put(WordDAO.ID, word.getId());
         values.put(WordDAO.CATEGORY, word.getWordCategory());
         values.put(WordDAO.VALUE, word.getValue());
         values.put(WordDAO.MEANING, word.getMeaning());
