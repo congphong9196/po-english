@@ -71,7 +71,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createTableScript = "CREATE TABLE IF Not EXISTS " + TopicDAO.TABLE_NAME + "("
                 + TopicDAO.ID + " INTEGER PRIMARY KEY,"
                 + TopicDAO.COURSE_ID + " INTEGER,"
-                + TopicDAO.NAME + " TEXT"
+                + TopicDAO.NAME + " TEXT,"
+                + TopicDAO.TOPIC_IMAGE + " TEXT"
                 + ")";
         db.execSQL(createTableScript);
         db.close();

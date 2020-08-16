@@ -1,13 +1,13 @@
 package com.example.recyclerview.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import com.example.recyclerview.R;
 import com.example.recyclerview.adapter.SettingAdapter;
@@ -15,10 +15,13 @@ import com.example.recyclerview.data.Setting;
 
 import java.util.ArrayList;
 
+import static com.example.recyclerview.data.DatabaseInitializer.DATABASE_INITIALIZED_KEY;
+
 public class SettingActivity extends AppCompatActivity implements SettingAdapter.OnItemClickListener {
     RecyclerView recyclerView;
     private static final int REMIND_ACTIVITY_REQUEST = 1001;
     private static final int DOWNLOAD_ACTIVITY_REQUEST = 1002;
+    private static final int CLEAR_DATABASE_REQUEST = 1003;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,12 @@ public class SettingActivity extends AppCompatActivity implements SettingAdapter
                 "Download course from server",
                 "Download course from server to work on local"
         ));
+        settings.add(new Setting(
+                CLEAR_DATABASE_REQUEST,
+                R.drawable.ic_baseline_clear_24,
+                "Clear database",
+                "Clear database for debugging, you need to restart you application"
+        ));
 
         SettingAdapter settingAdapter = new SettingAdapter(getApplicationContext(), settings, this);
         recyclerView.setAdapter(settingAdapter);
@@ -65,7 +74,13 @@ public class SettingActivity extends AppCompatActivity implements SettingAdapter
                 startActivityForResult(intent, setting.getId());
                 break;
             }
-
+            case CLEAR_DATABASE_REQUEST: {
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(DATABASE_INITIALIZED_KEY, false);
+                editor.apply();
+                break;
+            }
         }
     }
 }

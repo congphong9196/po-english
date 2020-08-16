@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class DatabaseInitializer implements DataInitializable{
-    static final String DATABASE_INITIALIZED_KEY = "DatabaseInitialized";
+    public static final String DATABASE_INITIALIZED_KEY = "DatabaseInitialized";
+    boolean isRunDatabaseInitialization = false;
 
     @Override
     public void runInitialization(Context context) {
@@ -14,7 +15,7 @@ public class DatabaseInitializer implements DataInitializable{
         boolean isDatabaseInitialized = sp.getBoolean(DATABASE_INITIALIZED_KEY, false);
 
         if (!isDatabaseInitialized) {
-//        if (true) {
+            isRunDatabaseInitialization = true;
             DatabaseHelper db = new DatabaseHelper(context);
             db.dropTables();
             db.createTables();
@@ -26,6 +27,12 @@ public class DatabaseInitializer implements DataInitializable{
             SharedPreferences.Editor editor = sp.edit();
             editor.putBoolean(DATABASE_INITIALIZED_KEY, true);
             editor.apply();
+        } else {
+            isRunDatabaseInitialization = false;
         }
+    }
+
+    public boolean isRunDatabaseInitialization() {
+        return isRunDatabaseInitialization;
     }
 }

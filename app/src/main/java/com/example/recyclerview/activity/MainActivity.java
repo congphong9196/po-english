@@ -34,37 +34,22 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         Context = this;
         isVisible = true;
 
-        GoToRemindActivityIfNecessary();
-        InitDatabaseInThread();
+        if (GoToRemindActivityIfNecessary()) {
+            return;
+        }
+        nextFragment(new CourseFragment(this), R.id.fragmentContent);
+        findViewById(R.id.database_loading_progress).setVisibility(View.INVISIBLE);
     }
 
-    private void GoToRemindActivityIfNecessary() {
+    private boolean GoToRemindActivityIfNecessary() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isRemindAlreadyBeSet = sharedPreferences.getBoolean(RemindActivity.ALREADY_SET_REMIND, false);
         if (!isRemindAlreadyBeSet) {
             Intent intent = new Intent(MainActivity.this, RemindActivity.class);
             startActivityForResult(intent, REMIND_ACTIVITY_REQUEST);
+            return true;
         }
-    }
-
-    private void InitDatabaseInThread() {
-        final MainActivity this_ = this;
-        Thread initializeDatabaseThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                new DatabaseInitializer().runInitialization(this_);
-                this_.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isVisible) {
-                            this_.nextFragment(new CourseFragment(this_), R.id.fragmentContent);
-                            findViewById(R.id.database_loading_progress).setVisibility(View.INVISIBLE);
-                        }
-                    }
-                });
-            }
-        });
-        initializeDatabaseThread.start();
+        return false;
     }
 
     public void nextFragment(androidx.fragment.app.Fragment fragment, int id) {

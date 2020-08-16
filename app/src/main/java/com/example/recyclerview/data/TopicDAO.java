@@ -68,6 +68,7 @@ public class TopicDAO {
     public static final String TABLE_NAME = "topic";
     public static final String ID = "id";
     public static final String NAME = "name";
+    public static final String TOPIC_IMAGE = "topic_image";
     public static final String COURSE_ID = "course_id";
     private final DatabaseHelper databaseHelper;
 
@@ -84,6 +85,7 @@ public class TopicDAO {
         ContentValues values = new ContentValues();
         values.put(COURSE_ID, topic.getCourseId());
         values.put(NAME, topic.getName());
+        values.put(TOPIC_IMAGE, topic.getImageEncodedString());
         return values;
     }
 
@@ -124,7 +126,8 @@ public class TopicDAO {
                 topics.add(new Topic(
                     cursor.getInt(0),
                     cursor.getInt(1),
-                    cursor.getString(2)
+                    cursor.getString(2),
+                    cursor.getString(3)
                 ));
             } while (cursor.moveToNext());
         }
@@ -141,9 +144,10 @@ public class TopicDAO {
 
         if (cursor.moveToFirst()) {
             topic = new Topic(
-                    cursor.getInt(0),
-                    cursor.getInt(1),
-                    cursor.getString(2)
+                cursor.getInt(0),
+                cursor.getInt(1),
+                cursor.getString(2),
+                cursor.getString(3)
             );
         }
 

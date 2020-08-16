@@ -16,7 +16,7 @@
             android:padding="15dp">
 
             <ImageView
-                android:id="@+id/progressBar"
+                android:id="@+id/imgViewTopicImage"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:gravity="center"
@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@+id/progressBar"
+                android:layout_toRightOf="@+id/imgViewTopicImage"
                 android:text="Topic title"
                 android:textColor="#4e66ef"
                 android:textSize="18dp"
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txtContentEnglishCatalog"
                 android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@+id/progressBar"
+                android:layout_toRightOf="@+id/imgViewTopicImage"
                 android:text="170 từ" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_height="20dp"
                 android:layout_below="@+id/txtTotalWordEnglishCatalog"
                 android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@+id/progressBar"
+                android:layout_toRightOf="@+id/imgViewTopicImage"
                 android:text="Tên khóa học"
                 android:textSize="14dp"
                 android:textStyle="italic" />
