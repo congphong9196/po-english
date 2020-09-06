@@ -1,9 +1,13 @@
 package com.example.recyclerview.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.recyclerview.data.Topic;
@@ -38,6 +42,11 @@ public class CourseTopicAdapter extends RecyclerView.Adapter<CourseTopicAdapter.
         holder.txtCourseName.setText(topic.getCourseName());
         holder.txtTopicName.setText(topic.getName());
         holder.txtNumberOfWords.setText(topic.getNumberOfWords() + " word");
+        if (!topic.getImageEncodedString().isEmpty()) {
+            byte[] decodedString = Base64.decode(topic.getImageEncodedString(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            holder.imgViewTopicImage.setImageBitmap(decodedByte);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +66,7 @@ public class CourseTopicAdapter extends RecyclerView.Adapter<CourseTopicAdapter.
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
+        private ImageView imgViewTopicImage;
         private TextView txtCourseName;
         private TextView txtTopicName;
         private TextView txtNumberOfWords;
@@ -66,6 +76,7 @@ public class CourseTopicAdapter extends RecyclerView.Adapter<CourseTopicAdapter.
             txtCourseName = itemView.findViewById(R.id.txtTitleEnglishCatalog);
             txtTopicName = itemView.findViewById(R.id.txtContentEnglishCatalog);
             txtNumberOfWords = itemView.findViewById(R.id.txtTotalWordEnglishCatalog);
+            imgViewTopicImage = itemView.findViewById(R.id.imgViewTopicImage);
         }
     }
 //    public interface OnItemClickListener {

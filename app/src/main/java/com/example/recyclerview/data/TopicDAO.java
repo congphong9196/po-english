@@ -68,6 +68,7 @@ public class TopicDAO {
     public static final String TABLE_NAME = "topic";
     public static final String ID = "id";
     public static final String NAME = "name";
+    public static final String TOPIC_IMAGE = "topic_image";
     public static final String COURSE_ID = "course_id";
     private final DatabaseHelper databaseHelper;
 
@@ -82,9 +83,9 @@ public class TopicDAO {
 
     public ContentValues getContentValues(Topic topic) {
         ContentValues values = new ContentValues();
-        values.put(ID, topic.getId());
         values.put(COURSE_ID, topic.getCourseId());
         values.put(NAME, topic.getName());
+        values.put(TOPIC_IMAGE, topic.getImageEncodedString());
         return values;
     }
 
@@ -101,6 +102,18 @@ public class TopicDAO {
         db.close();
     }
 
+    public Topic addTopicIfNotExists(Topic topic) {
+        Topic topicExisting = getTopicByNameAncCourseId(topic.getName(), topic.getCourseId());
+        if (topicExisting != null) {
+            return topicExisting;
+        }
+
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        addTopic(topic, db);
+        db.close();
+        return getTopicByNameAncCourseId(topic.getName(), topic.getCourseId());
+    }
+
     public ArrayList<Topic> getTopicsByCourseId(int courseId) {
         ArrayList<Topic> topics = new ArrayList<>();
 
@@ -113,11 +126,32 @@ public class TopicDAO {
                 topics.add(new Topic(
                     cursor.getInt(0),
                     cursor.getInt(1),
-                    cursor.getString(2)
+                    cursor.getString(2),
+                    cursor.getString(3)
                 ));
             } while (cursor.moveToNext());
         }
         cursor.close();
         return topics;
+    }
+
+    public Topic getTopicByNameAncCourseId(String topicName, int courseId) {
+        Topic topic = null;
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " where " + NAME + "='" + topicName + "' AND " + COURSE_ID + "=" + courseId;
+
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            topic = new Topic(
+                cursor.getInt(0),
+                cursor.getInt(1),
+                cursor.getString(2),
+                cursor.getString(3)
+            );
+        }
+
+        cursor.close();
+        return topic;
     }
 }

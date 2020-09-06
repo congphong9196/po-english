@@ -1,14 +1,31 @@
 package com.example.recyclerview.data;
 
+import android.util.Log;
+
 public class Topic {
     static int idCount = 0;
     private int id;
     private int courseId;
     private String name;
+    private String imageEncodedString = "";
 
     // Not inside database
     private String courseName;
     private int numberOfWords = 0;
+
+    public Topic(int id, int courseId, String name, String imageEncodedString) {
+        this.id = id;
+        this.courseId = courseId;
+        this.name = name;
+        this.imageEncodedString = imageEncodedString;
+        InitData();
+    }
+
+    private void InitData() {
+        if (imageEncodedString == null) {
+            imageEncodedString = "";
+        }
+    }
 
     public Topic(int id, int courseId, String name) {
         this.id = id;
@@ -22,6 +39,13 @@ public class Topic {
         this.name = name;
     }
 
+    public Topic(int courseId, String name, String imageEncodedString) {
+        this.id = idCount++;
+        this.courseId = courseId;
+        this.name = name;
+        this.imageEncodedString = imageEncodedString;
+        Log.d("TopicInit", imageEncodedString);
+    }
 
     public int getCourseId() {
         return courseId;
@@ -61,5 +85,13 @@ public class Topic {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getImageEncodedString() {
+        return imageEncodedString;
+    }
+
+    public void setImageEncodedString(String imageEncodedString) {
+        this.imageEncodedString = imageEncodedString;
     }
 }
